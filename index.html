@@ -3,177 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learning Statistics</title>
+  <title>Which Statistical Test? — SOC222</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="hero">
-    <div class="hero-inner">
-      <p class="eyebrow">SOC222 support site</p>
-      <h1>Learning Statistics</h1>
-      <p class="subtitle">
-        A decision flowchart for choosing confidence intervals, z tests, t tests, and chi square tests.
-      </p>
-      <div class="toolbar">
-        <button class="toggle-btn active" data-toggle="formulas">Show formulas</button>
-        <button class="toggle-btn active" data-toggle="examples">Show examples</button>
-        <button class="toggle-btn active" data-toggle="triggers">Show trigger words</button>
-        <button class="toggle-btn active" data-toggle="interpretation">Show interpretation tips</button>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">SOC222 · Statistical Decision Tool</p>
+      <h1>Which Test Do I Use?</h1>
+      <p class="tagline">Follow the flowchart step-by-step. Click each answer to move forward.</p>
+      <div class="header-actions">
+        <a href="reference.html" class="btn-secondary">📄 Full Formula Reference</a>
+        <button class="btn-ghost" id="btn-reset">↩ Start over</button>
       </div>
     </div>
   </header>
 
-  <main class="page">
-    <section class="legend">
-      <div class="legend-card">
-        <strong>How to use this</strong>
-        <p>
-          Start at the top. First decide whether you are estimating or testing. Then identify whether the
-          outcome variable is numeric or categorical. Then choose the formula that matches the structure of the question.
-        </p>
+  <main class="main-layout">
+
+    <!-- LEFT: Interactive flowchart walker -->
+    <section class="walker-col">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+        <span class="progress-label" id="progress-label">Step 1 of 4</span>
       </div>
-    </section>
 
-    <section class="flowchart-wrapper">
-      <div class="flowchart">
-        <div class="node start">
-          <h2>Start</h2>
-          <p>Are you estimating a population value or testing a hypothesis?</p>
+      <div class="step-stack" id="step-stack">
+        <!-- Steps injected by JS -->
+      </div>
+
+      <!-- Result card (shown at end) -->
+      <div class="result-card hidden" id="result-card">
+        <div class="result-badge" id="result-badge"></div>
+        <h2 class="result-name" id="result-name"></h2>
+        <p class="result-when" id="result-when"></p>
+        <div class="result-formula-wrap">
+          <p class="formula-label">Formula</p>
+          <div class="formula-box" id="result-formula"></div>
+          <p class="formula-sub" id="result-formula-sub"></p>
         </div>
-
-        <div class="branch-row two">
-          <div class="node decision">
-            <h3>If you are estimating</h3>
-            <p>Use a confidence interval.</p>
-          </div>
-          <div class="node decision">
-            <h3>If you are testing</h3>
-            <p>Identify the type of outcome variable.</p>
-          </div>
+        <div class="result-example-wrap" id="result-example-wrap">
+          <p class="example-label">Example question cue</p>
+          <p class="result-example" id="result-example"></p>
         </div>
-
-        <div class="branch-row two">
-          <div class="stack">
-            <div class="node method">
-              <h3>Confidence interval for a mean</h3>
-              <p class="triggers">Use when the outcome is numeric and you want to estimate a population mean.</p>
-              <div class="formula">Ȳ ± t* (s<sub>Y</sub> / √N)</div>
-              <p class="example">Example cue: “Construct a 95% confidence interval for the average burnout score.”</p>
-            </div>
-
-            <div class="node method">
-              <h3>Confidence interval for a proportion</h3>
-              <p class="triggers">Use when the outcome is categorical and you want to estimate a population proportion.</p>
-              <div class="formula">p̂ ± z* √(p̂(1 − p̂) / n)</div>
-              <p class="example">Use when the question asks you to estimate the proportion and give a confidence interval.</p>
-            </div>
-          </div>
-
-          <div class="stack">
-            <div class="node decision">
-              <h3>What kind of outcome variable do you have?</h3>
-              <p class="triggers">Numeric outcome = mean, average, score, years</p>
-              <p class="triggers">Categorical outcome = proportion, percent, yes or no, counts</p>
-            </div>
-
-            <div class="branch-row two nested">
-              <div class="stack">
-                <div class="node category">
-                  <h3>Numeric outcome</h3>
-                  <p class="triggers">Trigger words: mean, average, score, years</p>
-                </div>
-
-                <div class="node method">
-                  <h3>One sample t test</h3>
-                  <p class="triggers">One sample mean compared with a known or hypothesized population mean.</p>
-                  <div class="formula">t = (Ȳ − μ<sub>0</sub>) / (s<sub>Y</sub> / √N)</div>
-                  <p class="example">Example cue: “Is the average number of years of education significantly different from 12.2?”</p>
-                </div>
-
-                <div class="node method">
-                  <h3>Two sample t test</h3>
-                  <p class="triggers">Compare the means of two groups.</p>
-                  <div class="formula">t = (Ȳ<sub>1</sub> − Ȳ<sub>2</sub>) / SE<sub>Ȳ₁ − Ȳ₂</sub></div>
-                  <p class="example">Example cue: “Is there a gender difference in job satisfaction?”</p>
-                </div>
-
-                <div class="node note">
-                  <h3>Tail check for t tests</h3>
-                  <p>“Different” means two tailed.</p>
-                  <p>“Greater than” or “less than” means one tailed.</p>
-                </div>
-              </div>
-
-              <div class="stack">
-                <div class="node category">
-                  <h3>Categorical outcome</h3>
-                  <p class="triggers">Trigger words: proportion, percent, yes or no, counts</p>
-                </div>
-
-                <div class="node method">
-                  <h3>One proportion z test</h3>
-                  <p class="triggers">One sample proportion compared with a known or hypothesized population proportion.</p>
-                  <div class="formula">z = (p̂ − p<sub>0</sub>) / √(p<sub>0</sub>(1 − p<sub>0</sub>) / n)</div>
-                  <p class="example">Example cue: “Is the poverty rate less than 5 percent?”</p>
-                </div>
-
-                <div class="node method">
-                  <h3>Two proportion z test</h3>
-                  <p class="triggers">Compare proportions for two groups.</p>
-                  <div class="formula">z = (p̂<sub>1</sub> − p̂<sub>2</sub>) / SE<sub>p̂₁ − p̂₂</sub></div>
-                  <p class="example">Example cue: “Is there a gender difference in treatment seeking?”</p>
-                </div>
-
-                <div class="node method">
-                  <h3>Chi square test of association</h3>
-                  <p class="triggers">Use when both variables are categorical and the data are shown in a table of counts.</p>
-                  <div class="formula">χ² = Σ ((O − E)² / E)</div>
-                  <div class="formula secondary">Expected count: E = (row total × column total) / grand total</div>
-                  <p class="example">Example cue: “Is there an association between robbery victimization and concern about crime?”</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="result-steps-wrap" id="result-steps-wrap">
+          <p class="steps-label">Five-step model</p>
+          <ol class="steps-list" id="result-steps"></ol>
         </div>
-
-        <div class="node final">
-          <h3>Final step: interpret the result</h3>
-          <ul class="interpretation">
-            <li>If p &lt; α, reject H<sub>0</sub>.</li>
-            <li>If p ≥ α, fail to reject H<sub>0</sub>.</li>
-            <li>For a confidence interval, say: “We are 95 percent confident that the true value lies between ... and ...”</li>
-            <li>For tests, say: “There is a statistically significant difference ...” or “There is not a statistically significant difference ...”</li>
-            <li>For chi square, say: “There is evidence of an association ...” or “There is not evidence of an association ...”</li>
-          </ul>
+        <div class="result-interp-wrap" id="result-interp-wrap">
+          <p class="interp-label">How to state your conclusion</p>
+          <p class="result-interp" id="result-interp"></p>
+        </div>
+        <div class="result-actions">
+          <button class="btn-primary" id="btn-restart">Start over</button>
+          <a href="reference.html" class="btn-secondary">Full reference →</a>
         </div>
       </div>
     </section>
 
-    <section class="support-grid">
-      <article class="panel">
-        <h2>Quick recognition guide</h2>
-        <ul>
-          <li><strong>Mean / average / score / years</strong> usually points to t procedures.</li>
-          <li><strong>Proportion / percent / yes-no</strong> usually points to z procedures.</li>
-          <li><strong>Association / relationship / table of counts</strong> usually points to chi square.</li>
-          <li><strong>Estimate</strong> means confidence interval.</li>
-          <li><strong>Different</strong> usually means two tailed.</li>
-          <li><strong>Greater than</strong> or <strong>less than</strong> usually means one tailed.</li>
-        </ul>
-      </article>
+    <!-- RIGHT: Visual flowchart map -->
+    <aside class="map-col">
+      <p class="map-title">Flowchart map</p>
+      <div class="map-scroll">
+        <svg class="flowmap" id="flowmap" viewBox="0 0 320 700" xmlns="http://www.w3.org/2000/svg">
+          <!-- Drawn by JS -->
+        </svg>
+      </div>
+      <p class="map-hint">Highlighted in blue = your current path</p>
+    </aside>
 
-      <article class="panel">
-        <h2>Important reminder</h2>
-        <p>
-          Do not start by hunting for a formula. Start by identifying what kind of quantity you have and
-          what the question is asking you to do. The formula comes after that.
-        </p>
-      </article>
-    </section>
   </main>
 
   <footer class="site-footer">
-    <p>Built as a simple static site for GitHub Pages.</p>
+    <p>SOC222 · <em>Measuring the Social World</em> · Decision flowchart for choosing statistical tests</p>
   </footer>
 
   <script src="script.js"></script>
