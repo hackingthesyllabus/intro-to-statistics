@@ -6,199 +6,80 @@
   <title>Which Statistical Test? — SOC222</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\(','\)'], ['$', '$']], displayMath: [['\[','\]']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
+
   <header class="site-header">
     <div class="header-inner">
       <p class="eyebrow">SOC222 · Statistical Decision Tool</p>
       <h1>Which Test Do I Use?</h1>
-      <p class="tagline">Use the questions on the left to walk through the decision. Use the full flowchart on the right to see the complete structure and formulas in course notation.</p>
+      <p class="tagline">Follow the flowchart step-by-step. Click each answer to move forward.</p>
       <div class="header-actions">
-        <a href="reference.html" class="btn-secondary">Full formula reference</a>
-        <button class="btn-ghost" id="btn-reset">Start over</button>
+        <a href="reference.html" class="btn-secondary">📄 Full Formula Reference</a>
+        <button class="btn-ghost" id="btn-reset">↩ Start over</button>
       </div>
     </div>
   </header>
 
   <main class="main-layout">
-    <section class="walker-col">
-      <div class="section-card intro-card">
-        <h2>Decision questions</h2>
-        <p>Answer each question in order. The result card at the bottom will show the matching test, the formula, a course style example, and the five step model.</p>
-      </div>
 
+    <!-- LEFT: Interactive flowchart walker -->
+    <section class="walker-col">
       <div class="progress-bar-wrap">
         <div class="progress-bar" id="progress-bar"></div>
         <span class="progress-label" id="progress-label">Step 1 of 4</span>
       </div>
 
-      <div class="step-stack" id="step-stack"></div>
+      <div class="step-stack" id="step-stack">
+        <!-- Steps injected by JS -->
+      </div>
 
+      <!-- Result card (shown at end) -->
       <div class="result-card hidden" id="result-card">
-        <div class="result-top">
-          <div class="result-badge" id="result-badge"></div>
-          <div>
-            <h2 class="result-name" id="result-name"></h2>
-            <p class="result-when" id="result-when"></p>
-          </div>
-        </div>
-
+        <div class="result-badge" id="result-badge"></div>
+        <h2 class="result-name" id="result-name"></h2>
+        <p class="result-when" id="result-when"></p>
         <div class="result-formula-wrap">
-          <p class="block-label">Formula</p>
+          <p class="formula-label">Formula</p>
           <div class="formula-box" id="result-formula"></div>
-          <div class="formula-sub-box" id="result-formula-sub"></div>
+          <p class="formula-sub" id="result-formula-sub"></p>
         </div>
-
         <div class="result-example-wrap" id="result-example-wrap">
-          <p class="block-label">Example question cue</p>
+          <p class="example-label">Example question cue</p>
           <p class="result-example" id="result-example"></p>
         </div>
-
         <div class="result-steps-wrap" id="result-steps-wrap">
-          <p class="block-label">Five step model</p>
+          <p class="steps-label">Five-step model</p>
           <ol class="steps-list" id="result-steps"></ol>
         </div>
-
         <div class="result-interp-wrap" id="result-interp-wrap">
-          <p class="block-label">How to state your conclusion</p>
+          <p class="interp-label">How to state your conclusion</p>
           <p class="result-interp" id="result-interp"></p>
         </div>
-
         <div class="result-actions">
           <button class="btn-primary" id="btn-restart">Start over</button>
-          <a href="reference.html" class="btn-outline">Full reference</a>
+          <a href="reference.html" class="btn-secondary">Full reference →</a>
         </div>
       </div>
     </section>
 
+    <!-- RIGHT: Visual flowchart map -->
     <aside class="map-col">
-      <div class="section-card flowchart-card">
-        <div class="map-header">
-          <div>
-            <p class="map-title">Full flowchart</p>
-            <p class="map-hint">The highlighted boxes show your current path.</p>
-          </div>
-        </div>
-
-        <div class="flowchart-canvas">
-          <div class="map-node start-node" data-id="root">
-            <h3>Start</h3>
-            <p>Are you estimating a population value or testing a hypothesis?</p>
-          </div>
-
-          <div class="connector-v"></div>
-
-          <div class="branch-row two-cols top-split">
-            <div class="branch-col">
-              <div class="map-node decision-node" data-id="ci_branch">
-                <h3>Estimate</h3>
-                <p>Use a confidence interval. Then ask whether the outcome is a mean or a proportion.</p>
-              </div>
-
-              <div class="connector-v"></div>
-
-              <div class="map-node result-node ci-node" data-id="result_ci_mean">
-                <h4>Confidence interval for a mean</h4>
-                <div class="formula-display">\[ar{Y} \pm t^* s_{ar{Y}}\]</div>
-                <div class="formula-sub">\[s_{ar{Y}} = rac{s_Y}{\sqrt{N}}, \quad df = N - 1\]</div>
-              </div>
-
-              <div class="connector-v short"></div>
-
-              <div class="map-node result-node ci-node" data-id="result_ci_prop">
-                <h4>Confidence interval for a proportion</h4>
-                <div class="formula-display">\[\hat{p} \pm z^* \sqrt{rac{\hat{p}(1-\hat{p})}{n}}\]</div>
-              </div>
-            </div>
-
-            <div class="branch-col">
-              <div class="map-node decision-node" data-id="outcome_type">
-                <h3>Test</h3>
-                <p>Identify the outcome variable. Numeric outcomes use t procedures. Categorical outcomes use z procedures or chi square.</p>
-              </div>
-
-              <div class="connector-v"></div>
-
-              <div class="branch-row two-cols nested-split">
-                <div class="branch-col">
-                  <div class="map-node decision-node" data-id="t_samples">
-                    <h3>Numeric outcome</h3>
-                    <p>Mean, average, score, years. Next ask whether you have one sample or two.</p>
-                  </div>
-
-                  <div class="connector-v"></div>
-
-                  <div class="map-node result-node t-node" data-id="result_t1">
-                    <h4>One sample t test</h4>
-                    <div class="formula-display">\[t = rac{ar{Y} - \mu_0}{s_{ar{Y}}}\]</div>
-                    <div class="formula-sub">\[s_{ar{Y}} = rac{s_Y}{\sqrt{N}}\]</div>
-                  </div>
-
-                  <div class="connector-v short"></div>
-
-                  <div class="map-node result-node t-node" data-id="result_t2">
-                    <h4>Two sample t test</h4>
-                    <div class="formula-display">\[t = rac{ar{Y}_1 - ar{Y}_2}{s_{ar{Y}_1 - ar{Y}_2}}\]</div>
-                    <div class="formula-sub">\[s_{ar{Y}_1 - ar{Y}_2} = \sqrt{\left(s_{ar{Y}_1}ight)^2 + \left(s_{ar{Y}_2}ight)^2}\]</div>
-                  </div>
-                </div>
-
-                <div class="branch-col">
-                  <div class="map-node decision-node" data-id="z_or_chi">
-                    <h3>Categorical outcome</h3>
-                    <p>Proportion, percent, yes or no, rate. Next ask whether both variables are categorical.</p>
-                  </div>
-
-                  <div class="connector-v"></div>
-
-                  <div class="map-node decision-node" data-id="z_samples">
-                    <h3>One proportion or two proportions?</h3>
-                    <p>One sample compared to a known value uses one proportion z. Two groups uses two proportion z.</p>
-                  </div>
-
-                  <div class="connector-v"></div>
-
-                  <div class="map-node result-node z-node" data-id="result_z1">
-                    <h4>One proportion z test</h4>
-                    <div class="formula-display">\[z = rac{\hat{p} - \pi_0}{s_{\pi_0}}\]</div>
-                    <div class="formula-sub">\[s_{\pi_0} = \sqrt{rac{\pi_0(1-\pi_0)}{n}}\]</div>
-                  </div>
-
-                  <div class="connector-v short"></div>
-
-                  <div class="map-node result-node z-node" data-id="result_z2">
-                    <h4>Two proportion z test</h4>
-                    <div class="formula-display">\[z = rac{\hat{p}_1 - \hat{p}_2}{SE_{\hat{p}_1-\hat{p}_2}}\]</div>
-                    <div class="formula-sub">\[SE_{\hat{p}_1-\hat{p}_2} = \sqrt{\hat{p}(1-\hat{p})\left(rac{1}{n_1}+rac{1}{n_2}ight)}\]</div>
-                  </div>
-
-                  <div class="connector-v short"></div>
-
-                  <div class="map-node result-node chi-node" data-id="result_chi">
-                    <h4>Chi square test of association</h4>
-                    <div class="formula-display">\[\chi^2 = \sum rac{(f_o-f_e)^2}{f_e}\]</div>
-                    <div class="formula-sub">\[f_e = rac{(	ext{column total})(	ext{row total})}{n}, \quad df = (r-1)(c-1)\]</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <p class="map-title">Flowchart map</p>
+      <div class="map-scroll">
+        <svg class="flowmap" id="flowmap" viewBox="0 0 320 700" xmlns="http://www.w3.org/2000/svg">
+          <!-- Drawn by JS -->
+        </svg>
       </div>
+      <p class="map-hint">Highlighted in blue = your current path</p>
     </aside>
+
   </main>
 
   <footer class="site-footer">
-    <p>Based on SOC222 course materials covering confidence intervals, one sample and two sample tests, and chi square interpretation. All three tables are provided on the test. fileciteturn9file11turn9file16</p>
+    <p>SOC222 · <em>Measuring the Social World</em> · Decision flowchart for choosing statistical tests</p>
   </footer>
 
   <script src="script.js"></script>

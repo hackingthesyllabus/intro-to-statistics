@@ -6,122 +6,420 @@
   <title>Formula Reference — SOC222</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\(','\)'], ['$', '$']], displayMath: [['\[','\]']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body class="ref-page">
+
   <header class="site-header">
     <div class="header-inner">
       <p class="eyebrow">SOC222 · Statistical Decision Tool</p>
       <h1>Formula Reference</h1>
-      <p class="tagline">Course style notation for confidence intervals, one sample and two sample tests, and chi square.</p>
+      <p class="tagline">All tests, all formulas, with examples and interpretation guides.</p>
       <div class="header-actions">
-        <a href="index.html" class="btn-secondary">Back to the decision tool</a>
+        <a href="index.html" class="btn-secondary">← Back to flowchart</a>
       </div>
     </div>
   </header>
 
   <main class="ref-main">
+
+    <!-- QUICK RECOGNITION -->
     <section class="ref-section">
       <h2 class="ref-section-title">Quick recognition guide</h2>
       <div class="recognition-grid">
-        <div class="recog-card"><h3>Numeric outcome</h3><p class="recog-trigger">mean · average · score · years</p><p class="recog-result">Use a t procedure.</p></div>
-        <div class="recog-card"><h3>Categorical outcome</h3><p class="recog-trigger">proportion · percent · yes or no · rate</p><p class="recog-result">Use a z procedure.</p></div>
-        <div class="recog-card"><h3>Two categorical variables</h3><p class="recog-trigger">association · relationship · table of counts</p><p class="recog-result">Use chi square.</p></div>
-        <div class="recog-card"><h3>Estimating</h3><p class="recog-trigger">estimate · construct · confidence interval</p><p class="recog-result">Use a confidence interval.</p></div>
-      </div>
-    </section>
-
-    <section class="ref-section">
-      <div class="decision-reminder">
-        <h2>Before you pick a formula</h2>
-        <div class="decision-steps">
-          <div class="decision-step"><span class="d-num">1</span><div><strong>Estimate or test?</strong><br>Estimating uses a confidence interval. Testing uses a hypothesis test.</div></div>
-          <div class="decision-step"><span class="d-num">2</span><div><strong>What kind of outcome?</strong><br>Numeric outcomes use t. Categorical outcomes use z or chi square.</div></div>
-          <div class="decision-step"><span class="d-num">3</span><div><strong>One sample or two?</strong><br>One sample compares to a known value. Two sample compares two groups.</div></div>
-          <div class="decision-step"><span class="d-num">4</span><div><strong>Direction?</strong><br>Different means two tailed. Greater than or less than means one tailed.</div></div>
+        <div class="recog-card">
+          <div class="recog-icon">📊</div>
+          <h3>Numeric outcome</h3>
+          <p class="recog-trigger">mean · average · score · years · amount</p>
+          <p class="recog-result">→ Use a <strong>t procedure</strong></p>
+        </div>
+        <div class="recog-card">
+          <div class="recog-icon">📋</div>
+          <h3>Categorical outcome</h3>
+          <p class="recog-trigger">proportion · percent · yes/no · rate</p>
+          <p class="recog-result">→ Use a <strong>z procedure</strong></p>
+        </div>
+        <div class="recog-card">
+          <div class="recog-icon">🔲</div>
+          <h3>Two categorical variables</h3>
+          <p class="recog-trigger">association · relationship · table of counts</p>
+          <p class="recog-result">→ Use <strong>chi-square</strong></p>
+        </div>
+        <div class="recog-card">
+          <div class="recog-icon">📏</div>
+          <h3>Estimating, not testing</h3>
+          <p class="recog-trigger">construct · estimate · how confident</p>
+          <p class="recog-result">→ Use a <strong>confidence interval</strong></p>
+        </div>
+        <div class="recog-card">
+          <div class="recog-icon">↔️</div>
+          <h3>Two-tailed test</h3>
+          <p class="recog-trigger">different from · not equal to</p>
+          <p class="recog-result">→ H<sub>A</sub>: parameter <strong>≠</strong> value</p>
+        </div>
+        <div class="recog-card">
+          <div class="recog-icon">→</div>
+          <h3>One-tailed test</h3>
+          <p class="recog-trigger">greater than · less than · more likely · higher</p>
+          <p class="recog-result">→ H<sub>A</sub>: parameter <strong>&gt;</strong> or <strong>&lt;</strong> value</p>
         </div>
       </div>
     </section>
 
+    <!-- DECISION REMINDER -->
+    <section class="ref-section">
+      <div class="decision-reminder">
+        <h2>Before you pick a formula</h2>
+        <div class="decision-steps">
+          <div class="decision-step">
+            <span class="d-num">1</span>
+            <div><strong>Are you estimating or testing?</strong><br>Estimating → confidence interval. Testing → hypothesis test.</div>
+          </div>
+          <div class="decision-step">
+            <span class="d-num">2</span>
+            <div><strong>What kind of outcome variable?</strong><br>Numeric → t test. Categorical → z test. Both categorical → chi-square.</div>
+          </div>
+          <div class="decision-step">
+            <span class="d-num">3</span>
+            <div><strong>One sample or two?</strong><br>Comparing to a known value → one sample. Comparing two groups → two sample.</div>
+          </div>
+          <div class="decision-step">
+            <span class="d-num">4</span>
+            <div><strong>One-tailed or two-tailed?</strong><br>"Different" → two-tailed. "Greater/less than" → one-tailed.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIDENCE INTERVALS -->
     <section class="ref-section">
       <h2 class="ref-section-title">Confidence intervals</h2>
       <div class="formula-cards-grid">
+
         <article class="formula-card">
           <div class="fc-badge ci">CI</div>
           <h3>Confidence interval for a mean</h3>
-          <p class="fc-when">Numeric outcome. Estimate a population mean.</p>
-          <div class="formula-display">\[ar{Y} \pm t^* s_{ar{Y}}\]</div>
-          <div class="formula-sub-box">\[s_{ar{Y}} = rac{s_Y}{\sqrt{N}}, \quad df = N - 1\]</div>
+          <p class="fc-when">Use when: numeric outcome, estimating a population mean, unknown population σ.</p>
+          <div class="formula-display">
+            <span class="f-main">Ȳ ± t* (s<sub>Y</sub> / √N)</span>
+          </div>
+          <div class="formula-parts">
+            <div class="fp-row"><span class="fp-sym">Ȳ</span><span class="fp-desc">sample mean</span></div>
+            <div class="fp-row"><span class="fp-sym">t*</span><span class="fp-desc">critical t value (from t table, df = N − 1)</span></div>
+            <div class="fp-row"><span class="fp-sym">s<sub>Y</sub></span><span class="fp-desc">sample standard deviation</span></div>
+            <div class="fp-row"><span class="fp-sym">N</span><span class="fp-desc">sample size</span></div>
+          </div>
+          <div class="fc-example">
+            <span class="ex-label">Example cue</span>
+            <p>"Construct a 95% confidence interval for the average burnout score."</p>
+          </div>
+          <div class="fc-interp">
+            <span class="interp-label">Interpretation</span>
+            <p>"We are 95% confident that the true population mean lies between [lower] and [upper]."</p>
+          </div>
         </article>
+
         <article class="formula-card">
           <div class="fc-badge ci">CI</div>
           <h3>Confidence interval for a proportion</h3>
-          <p class="fc-when">Categorical outcome. Estimate a population proportion.</p>
-          <div class="formula-display">\[\hat{p} \pm z^* \sqrt{rac{\hat{p}(1-\hat{p})}{n}}\]</div>
+          <p class="fc-when">Use when: categorical outcome, estimating a population proportion.</p>
+          <div class="formula-display">
+            <span class="f-main">p̂ ± z* √(p̂(1 − p̂) / n)</span>
+          </div>
+          <div class="formula-parts">
+            <div class="fp-row"><span class="fp-sym">p̂</span><span class="fp-desc">sample proportion</span></div>
+            <div class="fp-row"><span class="fp-sym">z*</span><span class="fp-desc">critical z value (1.96 for 95%, 2.58 for 99%)</span></div>
+            <div class="fp-row"><span class="fp-sym">n</span><span class="fp-desc">sample size</span></div>
+          </div>
+          <div class="fc-example">
+            <span class="ex-label">Example cue</span>
+            <p>"Estimate the proportion of adults who support the policy and give a 95% confidence interval."</p>
+          </div>
+          <div class="fc-interp">
+            <span class="interp-label">Interpretation</span>
+            <p>"We are 95% confident that the true population proportion lies between [lower] and [upper]."</p>
+          </div>
         </article>
+
       </div>
     </section>
 
+    <!-- T TESTS -->
     <section class="ref-section">
-      <h2 class="ref-section-title">t tests</h2>
+      <h2 class="ref-section-title">t tests — numeric outcome</h2>
       <div class="formula-cards-grid">
+
         <article class="formula-card">
           <div class="fc-badge t1">t</div>
-          <h3>One sample t test</h3>
-          <p class="fc-when">One sample mean compared to a known or hypothesized population mean.</p>
-          <div class="formula-display">\[t = rac{ar{Y} - \mu_0}{s_{ar{Y}}}\]</div>
-          <div class="formula-sub-box">\[s_{ar{Y}} = rac{s_Y}{\sqrt{N}}, \quad df = N - 1\]</div>
+          <h3>One-sample t test</h3>
+          <p class="fc-when">Use when: numeric outcome, one sample mean compared to a known or hypothesized population mean.</p>
+          <div class="formula-display">
+            <span class="f-main">t = (Ȳ − μ<sub>0</sub>) / (s<sub>Y</sub> / √N)</span>
+          </div>
+          <div class="formula-parts">
+            <div class="fp-row"><span class="fp-sym">Ȳ</span><span class="fp-desc">sample mean</span></div>
+            <div class="fp-row"><span class="fp-sym">μ<sub>0</sub></span><span class="fp-desc">hypothesized population mean (from H₀)</span></div>
+            <div class="fp-row"><span class="fp-sym">s<sub>Y</sub> / √N</span><span class="fp-desc">standard error of the mean</span></div>
+            <div class="fp-row"><span class="fp-sym">df</span><span class="fp-desc">N − 1</span></div>
+          </div>
+          <div class="fc-example">
+            <span class="ex-label">Example cue</span>
+            <p>"Is the average number of years of education significantly different from the national average of 12.2 years?"</p>
+          </div>
+          <div class="fc-steps">
+            <span class="steps-label">Five-step model</span>
+            <ol>
+              <li>State H₀ and H<sub>A</sub> (e.g., H₀: μ = 12.2; H<sub>A</sub>: μ ≠ 12.2)</li>
+              <li>Choose α (usually 0.05) and identify df = N − 1</li>
+              <li>Find t<sub>critical</sub> from the t table</li>
+              <li>Calculate t<sub>obtained</sub> using the formula</li>
+              <li>Compare: if |t<sub>obtained</sub>| &gt; t<sub>critical</sub>, reject H₀</li>
+            </ol>
+          </div>
+          <div class="fc-interp">
+            <span class="interp-label">Interpretation</span>
+            <p>"There is [not] a statistically significant difference between the sample mean and the hypothesized population mean (t = [value], df = [N−1], p [&lt;/≥] 0.05)."</p>
+          </div>
         </article>
+
         <article class="formula-card">
           <div class="fc-badge t2">t</div>
-          <h3>Two sample t test</h3>
-          <p class="fc-when">Compare the means of two independent groups.</p>
-          <div class="formula-display">\[t = rac{ar{Y}_1 - ar{Y}_2}{s_{ar{Y}_1 - ar{Y}_2}}\]</div>
-          <div class="formula-sub-box">\[s_{ar{Y}_1 - ar{Y}_2} = \sqrt{\left(s_{ar{Y}_1}ight)^2 + \left(s_{ar{Y}_2}ight)^2}\]</div>
+          <h3>Two-sample t test</h3>
+          <p class="fc-when">Use when: numeric outcome, comparing the means of two independent groups.</p>
+          <div class="formula-display">
+            <span class="f-main">t = (Ȳ<sub>1</sub> − Ȳ<sub>2</sub>) / SE<sub>Ȳ₁−Ȳ₂</sub></span>
+          </div>
+          <div class="formula-sub-box">
+            <span class="f-sub">SE<sub>Ȳ₁−Ȳ₂</sub> = √( s<sub>1</sub>² / N<sub>1</sub> + s<sub>2</sub>² / N<sub>2</sub> )</span>
+          </div>
+          <div class="formula-parts">
+            <div class="fp-row"><span class="fp-sym">Ȳ<sub>1</sub>, Ȳ<sub>2</sub></span><span class="fp-desc">means of the two groups</span></div>
+            <div class="fp-row"><span class="fp-sym">s<sub>1</sub>, s<sub>2</sub></span><span class="fp-desc">standard deviations of each group</span></div>
+            <div class="fp-row"><span class="fp-sym">N<sub>1</sub>, N<sub>2</sub></span><span class="fp-desc">sample sizes of each group</span></div>
+            <div class="fp-row"><span class="fp-sym">df</span><span class="fp-desc">(N<sub>1</sub> − 1) + (N<sub>2</sub> − 1)</span></div>
+          </div>
+          <div class="fc-example">
+            <span class="ex-label">Example cue</span>
+            <p>"Is there a gender difference in job satisfaction?" (satisfaction measured on a numeric scale)</p>
+          </div>
+          <div class="fc-steps">
+            <span class="steps-label">Five-step model</span>
+            <ol>
+              <li>H₀: μ<sub>1</sub> = μ<sub>2</sub>; H<sub>A</sub>: μ<sub>1</sub> ≠ μ<sub>2</sub> (or &gt; / &lt; for one-tailed)</li>
+              <li>Choose α; calculate df = (N<sub>1</sub>−1) + (N<sub>2</sub>−1)</li>
+              <li>Find t<sub>critical</sub> from the t table</li>
+              <li>Calculate SE and then t<sub>obtained</sub></li>
+              <li>Compare: reject H₀ if |t<sub>obtained</sub>| &gt; t<sub>critical</sub></li>
+            </ol>
+          </div>
+          <div class="fc-interp">
+            <span class="interp-label">Interpretation</span>
+            <p>"There is [not] a statistically significant difference in [outcome] between [group 1] and [group 2]."</p>
+          </div>
         </article>
+
+      </div>
+
+      <div class="tail-note">
+        <strong>Tail check:</strong>
+        "Different from" or "not equal to" → <strong>two-tailed</strong> test (divide α by 2, use ±t<sub>critical</sub>).
+        "Greater than" or "less than" → <strong>one-tailed</strong> test (use only one side of the distribution).
       </div>
     </section>
 
+    <!-- Z TESTS -->
     <section class="ref-section">
-      <h2 class="ref-section-title">z tests</h2>
+      <h2 class="ref-section-title">z tests — categorical outcome (proportions)</h2>
       <div class="formula-cards-grid">
+
         <article class="formula-card">
           <div class="fc-badge z1">z</div>
-          <h3>One proportion z test</h3>
-          <p class="fc-when">One sample proportion compared to a known or hypothesized population proportion.</p>
-          <div class="formula-display">\[z = rac{\hat{p} - \pi_0}{s_{\pi_0}}\]</div>
-          <div class="formula-sub-box">\[s_{\pi_0} = \sqrt{rac{\pi_0(1-\pi_0)}{n}}\]</div>
+          <h3>One-proportion z test</h3>
+          <p class="fc-when">Use when: categorical outcome, one sample proportion compared to a known or hypothesized population proportion.</p>
+          <div class="formula-display">
+            <span class="f-main">z = (p̂ − π<sub>0</sub>) / s<sub>π₀</sub></span>
+          </div>
+          <div class="formula-sub-box">
+            <span class="f-sub">s<sub>π₀</sub> = √( π<sub>0</sub>(1 − π<sub>0</sub>) / n )</span>
+          </div>
+          <div class="formula-parts">
+            <div class="fp-row"><span class="fp-sym">p̂</span><span class="fp-desc">sample proportion</span></div>
+            <div class="fp-row"><span class="fp-sym">π<sub>0</sub></span><span class="fp-desc">hypothesized population proportion (from H₀)</span></div>
+            <div class="fp-row"><span class="fp-sym">s<sub>π₀</sub></span><span class="fp-desc">standard error of the proportion under H₀</span></div>
+            <div class="fp-row"><span class="fp-sym">n</span><span class="fp-desc">sample size</span></div>
+          </div>
+          <div class="fc-example">
+            <span class="ex-label">Example cue</span>
+            <p>"Is the poverty rate less than 5%?" / "Are older people more likely to be victimized?" (compared to a known rate)</p>
+          </div>
+          <div class="fc-steps">
+            <span class="steps-label">Five-step model</span>
+            <ol>
+              <li>H₀: p = π<sub>0</sub>; H<sub>A</sub>: p &lt; π<sub>0</sub> (or &gt; or ≠)</li>
+              <li>Choose α; find z<sub>critical</sub> from z table (±1.96 for two-tailed α=0.05)</li>
+              <li>Calculate s<sub>π₀</sub></li>
+              <li>Calculate z<sub>obtained</sub></li>
+              <li>Compare to z<sub>critical</sub>; reject H₀ if |z<sub>obtained</sub>| &gt; z<sub>critical</sub></li>
+            </ol>
+          </div>
+          <div class="fc-interp">
+            <span class="interp-label">Interpretation</span>
+            <p>"There is [not] sufficient evidence to conclude that the population proportion is [greater than / less than / different from] π<sub>0</sub>."</p>
+          </div>
         </article>
+
         <article class="formula-card">
           <div class="fc-badge z2">z</div>
-          <h3>Two proportion z test</h3>
-          <p class="fc-when">Compare proportions of two independent groups.</p>
-          <div class="formula-display">\[z = rac{\hat{p}_1 - \hat{p}_2}{SE_{\hat{p}_1-\hat{p}_2}}\]</div>
-          <div class="formula-sub-box">\[SE_{\hat{p}_1-\hat{p}_2} = \sqrt{\hat{p}(1-\hat{p})\left(rac{1}{n_1}+rac{1}{n_2}ight)}\]</div>
+          <h3>Two-proportion z test</h3>
+          <p class="fc-when">Use when: categorical outcome, comparing proportions for two independent groups.</p>
+          <div class="formula-display">
+            <span class="f-main">z = (p̂<sub>1</sub> − p̂<sub>2</sub>) / SE<sub>p̂₁−p̂₂</sub></span>
+          </div>
+          <div class="formula-sub-box">
+            <span class="f-sub">SE<sub>p̂₁−p̂₂</sub> = √( p̂(1−p̂)(1/n<sub>1</sub> + 1/n<sub>2</sub>) )</span>
+          </div>
+          <div class="formula-note">where p̂ is the pooled proportion: p̂ = (x<sub>1</sub> + x<sub>2</sub>) / (n<sub>1</sub> + n<sub>2</sub>)</div>
+          <div class="formula-parts">
+            <div class="fp-row"><span class="fp-sym">p̂<sub>1</sub>, p̂<sub>2</sub></span><span class="fp-desc">sample proportions for each group</span></div>
+            <div class="fp-row"><span class="fp-sym">n<sub>1</sub>, n<sub>2</sub></span><span class="fp-desc">sample sizes of each group</span></div>
+            <div class="fp-row"><span class="fp-sym">x<sub>1</sub>, x<sub>2</sub></span><span class="fp-desc">number of "successes" in each group</span></div>
+          </div>
+          <div class="fc-example">
+            <span class="ex-label">Example cue</span>
+            <p>"Is there a gender difference in seeking mental health treatment?" (outcome is yes/no)</p>
+          </div>
+          <div class="fc-steps">
+            <span class="steps-label">Five-step model</span>
+            <ol>
+              <li>H₀: p<sub>1</sub> = p<sub>2</sub>; H<sub>A</sub>: p<sub>1</sub> ≠ p<sub>2</sub></li>
+              <li>Choose α; find z<sub>critical</sub> (±1.96 for α=0.05, two-tailed)</li>
+              <li>Calculate pooled p̂, then SE</li>
+              <li>Calculate z<sub>obtained</sub></li>
+              <li>Compare; reject H₀ if |z<sub>obtained</sub>| &gt; z<sub>critical</sub></li>
+            </ol>
+          </div>
+          <div class="fc-interp">
+            <span class="interp-label">Interpretation</span>
+            <p>"There is [not] a statistically significant difference in [outcome] between [group 1] and [group 2]."</p>
+          </div>
         </article>
+
       </div>
     </section>
 
+    <!-- CHI SQUARE -->
     <section class="ref-section">
-      <h2 class="ref-section-title">Chi square</h2>
+      <h2 class="ref-section-title">Chi-square test — two categorical variables</h2>
       <div class="formula-cards-grid">
-        <article class="formula-card">
+
+        <article class="formula-card wide">
           <div class="fc-badge chi">χ²</div>
-          <h3>Chi square test of association</h3>
-          <p class="fc-when">Both variables are categorical and the data are given in a contingency table.</p>
-          <div class="formula-display">\[\chi^2 = \sum rac{(f_o-f_e)^2}{f_e}\]</div>
-          <div class="formula-sub-box">\[f_e = rac{(	ext{column total})(	ext{row total})}{n}, \quad df = (r-1)(c-1)\]</div>
+          <h3>Chi-square test of association</h3>
+          <p class="fc-when">Use when: both variables are categorical and data are presented in a contingency table (counts). Testing whether the two variables are associated.</p>
+          <div class="formula-display">
+            <span class="f-main">χ² = Σ ( (O − E)² / E )</span>
+          </div>
+          <div class="formula-sub-box">
+            <span class="f-sub">E = (row total × column total) / grand total</span>
+          </div>
+          <div class="formula-parts">
+            <div class="fp-row"><span class="fp-sym">O</span><span class="fp-desc">observed cell count (from your table)</span></div>
+            <div class="fp-row"><span class="fp-sym">E</span><span class="fp-desc">expected cell count (if H₀ were true)</span></div>
+            <div class="fp-row"><span class="fp-sym">df</span><span class="fp-desc">(rows − 1) × (columns − 1)</span></div>
+          </div>
+          <div class="fc-example">
+            <span class="ex-label">Example cue</span>
+            <p>"Is there an association between having been a victim of robbery and concern about crime?" (both are categorical — yes/no, not/moderate/very concerned)</p>
+          </div>
+          <div class="fc-steps">
+            <span class="steps-label">Five-step model</span>
+            <ol>
+              <li>H₀: the two variables are independent (no association); H<sub>A</sub>: the two variables are associated</li>
+              <li>Choose α; calculate df = (r − 1)(c − 1); find χ²<sub>critical</sub> from chi-square table</li>
+              <li>Calculate expected counts: E = (row total × column total) / grand total for every cell</li>
+              <li>Calculate χ²<sub>obtained</sub> = Σ (O − E)² / E summed over all cells</li>
+              <li>Compare: reject H₀ if χ²<sub>obtained</sub> &gt; χ²<sub>critical</sub></li>
+            </ol>
+          </div>
+          <div class="fc-interp">
+            <span class="interp-label">Interpretation</span>
+            <p>"There is [not] evidence of an association between [variable 1] and [variable 2] (χ² = [value], df = [value], p [&lt;/≥] 0.05)."</p>
+          </div>
+          <div class="chi-note">
+            <strong>Note:</strong> Chi-square is always a two-tailed / non-directional test. You cannot specify "greater than" or "less than." The hypotheses are always about independence vs. association.
+          </div>
         </article>
+
       </div>
     </section>
+
+    <!-- COMMON CRITICAL VALUES -->
+    <section class="ref-section">
+      <h2 class="ref-section-title">Common critical values (reference)</h2>
+      <div class="crit-grid">
+        <div class="crit-card">
+          <h4>z critical values</h4>
+          <table class="crit-table">
+            <thead><tr><th>α</th><th>Two-tailed</th><th>One-tailed</th></tr></thead>
+            <tbody>
+              <tr><td>0.10</td><td>±1.645</td><td>±1.282</td></tr>
+              <tr><td>0.05</td><td>±1.960</td><td>±1.645</td></tr>
+              <tr><td>0.01</td><td>±2.576</td><td>±2.326</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="crit-card">
+          <h4>t critical values (selected df)</h4>
+          <table class="crit-table">
+            <thead><tr><th>df</th><th>α=0.05 two-tailed</th><th>α=0.05 one-tailed</th></tr></thead>
+            <tbody>
+              <tr><td>10</td><td>±2.228</td><td>±1.812</td></tr>
+              <tr><td>20</td><td>±2.086</td><td>±1.725</td></tr>
+              <tr><td>30</td><td>±2.042</td><td>±1.697</td></tr>
+              <tr><td>60</td><td>±2.000</td><td>±1.671</td></tr>
+              <tr><td>120</td><td>±1.980</td><td>±1.658</td></tr>
+              <tr><td>∞</td><td>±1.960</td><td>±1.645</td></tr>
+            </tbody>
+          </table>
+          <p class="crit-note">Use df = N − 1 for one-sample; df = (N₁−1)+(N₂−1) for two-sample</p>
+        </div>
+        <div class="crit-card">
+          <h4>χ² critical values</h4>
+          <table class="crit-table">
+            <thead><tr><th>df</th><th>α=0.05</th><th>α=0.01</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>3.841</td><td>6.635</td></tr>
+              <tr><td>2</td><td>5.991</td><td>9.210</td></tr>
+              <tr><td>3</td><td>7.815</td><td>11.341</td></tr>
+              <tr><td>4</td><td>9.488</td><td>13.277</td></tr>
+              <tr><td>6</td><td>12.592</td><td>16.812</td></tr>
+            </tbody>
+          </table>
+          <p class="crit-note">df = (rows−1)(columns−1)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIVE STEP MODEL -->
+    <section class="ref-section">
+      <div class="five-step-box">
+        <h2>The five-step model — always use this structure</h2>
+        <div class="five-step-grid">
+          <div class="fs-step"><span class="fs-num">1</span><div><strong>Formulate hypotheses</strong><br>State H₀ (null) and H<sub>A</sub> (alternative) using population notation (μ, p, π).</div></div>
+          <div class="fs-step"><span class="fs-num">2</span><div><strong>Set alpha and find critical value</strong><br>Choose α (usually 0.05). Use df to look up t<sub>critical</sub> or χ²<sub>critical</sub>, or use z table for z<sub>critical</sub>.</div></div>
+          <div class="fs-step"><span class="fs-num">3</span><div><strong>Calculate the test statistic</strong><br>Plug numbers into the correct formula to get t<sub>obtained</sub>, z<sub>obtained</sub>, or χ²<sub>obtained</sub>.</div></div>
+          <div class="fs-step"><span class="fs-num">4</span><div><strong>Make a decision</strong><br>If the obtained statistic exceeds the critical value (or p &lt; α), reject H₀. Otherwise, fail to reject H₀.</div></div>
+          <div class="fs-step"><span class="fs-num">5</span><div><strong>State your conclusion</strong><br>Write a sentence in plain language about what the result means for your research question.</div></div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <footer class="site-footer">
+    <p>SOC222 · <em>Measuring the Social World</em> · Formula Reference</p>
+  </footer>
+
 </body>
 </html>
