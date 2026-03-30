@@ -1,119 +1,783 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Which Statistical Test Should I Use?</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Which Statistical Test Should I Use?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root {
+  --bg:#f4f6fb; --surface:#fff; --surface2:#f8f9fc;
+  --ink:#12213a; --ink2:#3a4a62; --muted:#6b7a99;
+  --line:#dde3ef; --line2:#c5cedf;
+  --accent:#2347a8; --accent-soft:#eef2fb;
+  --ci:#2e7d32; --ci-soft:#f1faf2;
+  --t:#bf360c;  --t-soft:#fff8f5;
+  --z:#1565c0;  --z-soft:#f0f5ff;
+  --chi:#6a1b9a; --chi-soft:#faf0ff;
+  --radius:12px; --radius-sm:8px;
+  --shadow-sm:0 2px 8px rgba(18,33,58,.06);
+  --shadow:0 4px 20px rgba(18,33,58,.09);
+  --shadow-lg:0 8px 40px rgba(18,33,58,.13);
+}
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;}
+h1,h2,h3,h4{margin:0;font-family:'Instrument Serif',Georgia,serif;font-weight:400;}
+p{margin:0;} ul,ol{margin:0;padding-left:1.3em;} li{margin-bottom:.3em;} a{color:var(--accent);}
 
-  <!-- MathJax for proper formula rendering -->
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(', '\\)']],
-        displayMath: [['\\[', '\\]']],
-        packages: {'[+]': ['ams']}
-      },
-      options: {
-        skipHtmlTags: ['script','noscript','style','textarea','pre']
-      },
-      startup: {
-        ready() {
-          MathJax.startup.defaultReady();
-        }
-      }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+/* HEADER */
+.site-header{background:linear-gradient(135deg,#12213a 0%,#1e3a6e 60%,#2a5298 100%);color:white;padding:0;}
+.header-inner{max-width:1380px;margin:0 auto;padding:36px 24px 28px;}
+.site-header h1{font-size:clamp(26px,4vw,42px);color:white;margin-bottom:8px;}
+.tagline{font-size:15px;color:rgba(255,255,255,.75);max-width:700px;margin-bottom:20px;}
+.header-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.25);padding:9px 18px;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.btn-ghost:hover{color:white;border-color:rgba(255,255,255,.5);}
+
+/* LAYOUT */
+.main-layout{max-width:1380px;margin:0 auto;padding:28px 24px 48px;display:grid;grid-template-columns:1fr 460px;gap:28px;align-items:start;}
+@media(max-width:1100px){.main-layout{grid-template-columns:1fr 360px;}}
+@media(max-width:860px){.main-layout{grid-template-columns:1fr;}.map-col{order:-1;}}
+
+/* PROGRESS */
+.progress-bar-wrap{background:var(--line);border-radius:999px;height:6px;margin-bottom:24px;position:relative;overflow:visible;}
+.progress-bar{background:var(--accent);height:100%;border-radius:999px;transition:width .35s ease;width:0%;}
+.progress-label{position:absolute;right:0;top:-18px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;}
+
+/* STEP STACK */
+.step-stack{display:flex;flex-direction:column;gap:0;}
+.step-block{position:relative;padding:0;margin-bottom:4px;}
+.step-block::before{content:'';display:block;width:2px;height:20px;background:var(--line2);margin:0 auto 4px;border-radius:1px;}
+.step-block:first-child::before{display:none;}
+.step-question{display:flex;align-items:flex-start;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow-sm);}
+.step-block.active .step-question{border-color:var(--accent);box-shadow:0 0 0 3px rgba(35,71,168,.1),var(--shadow-sm);}
+.step-badge{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:white;font-size:13px;font-weight:600;flex-shrink:0;font-family:'DM Mono',monospace;}
+.step-block.visited .step-badge{background:var(--line2);color:var(--muted);}
+.step-q-text{flex:1;}
+.step-q-main{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.step-block.visited .step-q-main{color:var(--muted);}
+.step-hint{font-size:13px;color:var(--muted);font-style:italic;}
+.step-answers{display:flex;flex-direction:column;gap:8px;padding:12px 20px 20px 64px;}
+.answer-btn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 18px;background:var(--surface2);border:1.5px solid var(--line);border-radius:var(--radius-sm);cursor:pointer;text-align:left;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.answer-btn:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent);transform:translateX(4px);}
+.answer-btn.chosen{background:var(--accent-soft);border-color:var(--accent);}
+.answer-btn:disabled{cursor:default;opacity:.7;}
+.answer-label{font-size:14px;font-weight:600;color:var(--ink);}
+.answer-btn.chosen .answer-label{color:var(--accent);}
+.answer-btn:disabled .answer-label{color:var(--muted);}
+.answer-sublabel{font-size:12px;color:var(--muted);}
+
+/* RESULT CARD */
+.result-card{background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:28px;box-shadow:var(--shadow-lg);margin-top:20px;display:none;}
+.result-card.visible{display:block;animation:slideIn .3s ease;}
+.result-card.hidden{display:none;}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.result-badge{display:inline-flex;align-items:center;justify-content:center;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:.04em;margin-bottom:12px;}
+.badge-ci{background:var(--ci-soft);color:var(--ci);border:1.5px solid var(--ci);}
+.badge-t{background:var(--t-soft);color:var(--t);border:1.5px solid var(--t);}
+.badge-z{background:var(--z-soft);color:var(--z);border:1.5px solid var(--z);}
+.badge-chi{background:var(--chi-soft);color:var(--chi);border:1.5px solid var(--chi);}
+.result-name{font-size:22px;margin-bottom:8px;}
+.result-when{font-size:14px;color:var(--ink2);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+
+/* SECTION LABELS */
+.section-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;display:block;}
+.section-label-plain{font-size:13px;font-weight:700;color:var(--ink2);font-family:'DM Sans',sans-serif;margin-bottom:8px;display:block;}
+
+/* FORMULA */
+.formula-box{background:#f5f7ff;border:1.5px solid #c5cfea;border-radius:var(--radius-sm);padding:22px 24px;color:var(--ink);line-height:1.8;overflow-x:auto;text-align:center;font-size:1.1em;}
+.formula-sub-note{font-size:13px;color:var(--muted);margin-top:8px;text-align:center;overflow-x:auto;}
+.result-formula-wrap{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+
+/* LEGEND */
+.result-legend-wrap{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-top:10px;}
+.legend-row{display:flex;align-items:baseline;gap:10px;background:var(--surface2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px 12px;}
+.legend-sym{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);flex-shrink:0;min-width:60px;text-align:right;}
+.legend-desc{font-size:12.5px;color:var(--ink2);line-height:1.4;}
+
+/* MEASURES */
+.result-measures-wrap{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+.measures-list{margin-top:8px;}
+.measures-list li{font-size:13.5px;color:var(--ink2);padding:3px 0;line-height:1.5;}
+
+/* EXAMPLE / STEPS / INTERP */
+.result-example-wrap,.result-steps-wrap,.result-interp-wrap{margin-bottom:18px;}
+.result-example{font-size:14px;color:var(--ink2);font-style:italic;background:#fffdf0;border-left:3px solid #f0c040;padding:10px 14px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;}
+.steps-list{margin-top:8px;}
+.steps-list li{font-size:13.5px;color:var(--ink2);padding:4px 0;line-height:1.6;}
+.result-interp{font-size:14px;background:#f0faf1;border-left:3px solid var(--ci);padding:10px 14px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-style:italic;color:var(--ink2);}
+.result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:1px solid var(--line);}
+.btn-primary{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .15s;border:1px solid transparent;font-family:'DM Sans',sans-serif;background:var(--accent);color:white;}
+.btn-primary:hover{background:#1a3690;}
+
+/* MAP COL */
+.map-col{position:sticky;top:24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm);}
+.map-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:14px;}
+.map-scroll{overflow-x:auto;}
+.flowmap{width:100%;max-width:100%;display:block;margin:0 auto;}
+.map-hint{font-size:11px;color:var(--muted);margin-top:10px;text-align:center;font-style:italic;}
+
+/* FOOTER */
+.site-footer{background:var(--ink);color:rgba(255,255,255,.45);text-align:center;padding:20px 24px;font-size:13px;}
+.site-footer em{font-style:italic;color:rgba(255,255,255,.6);}
+
+@media(max-width:680px){
+  .legend-grid{grid-template-columns:1fr;}
+  .step-answers{padding-left:20px;}
+}
+</style>
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <h1>Which Statistical Test Do I Use?</h1>
-      <p class="tagline">Answer a few plain-English questions and we'll point you to the right test — with the formula, a worked example, and everything you need to interpret your results.</p>
-      <div class="header-actions">
-        <button class="btn-ghost" id="btn-reset">↩ Start over</button>
+<header class="site-header">
+  <div class="header-inner">
+    <h1>Which Statistical Test Should I Use?</h1>
+    <p class="tagline">Answer a few plain-English questions and we'll point you to the right test — with the formula written out properly, a worked example, and everything you need to get your answer.</p>
+    <div class="header-actions">
+      <button class="btn-ghost" id="btn-reset">↩ Start over</button>
+    </div>
+  </div>
+</header>
+
+<main class="main-layout">
+  <section class="walker-col">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
+      <span class="progress-label" id="progress-label">Step 1 of ~4</span>
+    </div>
+    <div class="step-stack" id="step-stack"></div>
+
+    <div class="result-card hidden" id="result-card">
+      <div class="result-badge" id="result-badge"></div>
+      <h2 class="result-name" id="result-name"></h2>
+      <p class="result-when" id="result-when"></p>
+
+      <div class="result-formula-wrap">
+        <span class="section-label">The Formula</span>
+        <div class="formula-box" id="result-formula"></div>
+        <div class="formula-sub-note" id="result-formula-sub"></div>
+      </div>
+
+      <div class="result-legend-wrap" id="result-legend-wrap">
+        <span class="section-label-plain">📖 What each symbol means</span>
+        <div class="legend-grid" id="result-legend"></div>
+      </div>
+
+      <div class="result-measures-wrap" id="result-measures-wrap">
+        <span class="section-label-plain">🧮 What you will need to find or calculate</span>
+        <ul class="measures-list" id="result-measures"></ul>
+      </div>
+
+      <div class="result-example-wrap">
+        <span class="section-label">Example question</span>
+        <p class="result-example" id="result-example"></p>
+      </div>
+
+      <div class="result-steps-wrap">
+        <span class="section-label">Step-by-step solution</span>
+        <ol class="steps-list" id="result-steps"></ol>
+      </div>
+
+      <div class="result-interp-wrap">
+        <span class="section-label">How to write your conclusion</span>
+        <p class="result-interp" id="result-interp"></p>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn-primary" id="btn-restart">↩ Start over</button>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main class="main-layout">
+  <aside class="map-col">
+    <p class="map-title">Your path through the flowchart</p>
+    <div class="map-scroll">
+      <svg class="flowmap" id="flowmap" viewBox="0 0 440 640" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <p class="map-hint">Blue = your current path</p>
+  </aside>
+</main>
 
-    <!-- LEFT: Interactive flowchart walker -->
-    <section class="walker-col">
-      <div class="progress-bar-wrap">
-        <div class="progress-bar" id="progress-bar"></div>
-        <span class="progress-label" id="progress-label">Step 1 of ~4</span>
-      </div>
+<footer class="site-footer">
+  <p>Statistical decision flowchart &middot; <em>Measuring the Social World</em></p>
+</footer>
 
-      <div class="step-stack" id="step-stack">
-        <!-- Steps injected by JS -->
-      </div>
+<script>
+// ── TREE DATA ──────────────────────────────────────────────────────
+const NODES = {
+  root: {
+    id: "root",
+    question: "What is the goal of your analysis?",
+    hint: "Are you trying to estimate something (like finding an average for a whole population), or are you testing a specific claim (like whether two groups differ)?",
+    answers: [
+      { label: "Estimate a population value", sublabel: "Keywords: estimate, construct a confidence interval, margin of error", next: "ci_branch" },
+      { label: "Test a hypothesis", sublabel: "Keywords: test, significant, different from, greater than, less than", next: "outcome_type" }
+    ]
+  },
+  ci_branch: {
+    id: "ci_branch",
+    question: "What kind of outcome are you measuring?",
+    hint: "Is it a number you can average — like a score, income, or years of school? Or is it a yes/no result that you express as a percentage or proportion?",
+    answers: [
+      { label: "A number I can average — mean, score, years", sublabel: "e.g., average burnout score, mean years of education, typical salary", next: "result_ci_mean" },
+      { label: "A proportion or percentage — yes/no outcome", sublabel: "e.g., proportion who voted, percent victimized, rate of support", next: "result_ci_prop" }
+    ]
+  },
+  outcome_type: {
+    id: "outcome_type",
+    question: "What kind of outcome are you measuring?",
+    hint: "A mean or average means your outcome is numeric. A proportion or percentage means your outcome is categorical — it comes from counting how many people fall into a category (yes vs. no, etc.).",
+    answers: [
+      { label: "A mean or average — numeric measurement", sublabel: "e.g., job satisfaction score, years of education, age", next: "t_samples" },
+      { label: "A proportion or percentage — yes/no or category", sublabel: "e.g., poverty rate, sought treatment yes/no, voted or did not vote", next: "z_or_chi" }
+    ]
+  },
+  t_samples: {
+    id: "t_samples",
+    question: "How many groups are you comparing?",
+    hint: "Are you comparing your sample to one known benchmark (like a national average)? Or are you comparing two separate groups against each other (like men vs. women)?",
+    answers: [
+      { label: "One group — comparing to a known or official value", sublabel: "e.g., Is our city average different from the national average?", next: "result_t1" },
+      { label: "Two groups — comparing two groups to each other", sublabel: "e.g., Is the average for Group A different from Group B?", next: "result_t2" }
+    ]
+  },
+  z_or_chi: {
+    id: "z_or_chi",
+    question: "Are both of your variables categories, or just the outcome?",
+    hint: "Chi-square is for when you have a table of counts — two categorical variables crossed together (like a crosstab or contingency table). If you are only testing one proportion or comparing two proportions, use a z test.",
+    answers: [
+      { label: "Just the outcome is a category — I am testing a proportion", sublabel: "e.g., Is the poverty rate below 5%? Is there a gender gap in treatment-seeking?", next: "z_samples" },
+      { label: "Both variables are categories — I have a crosstab (table of counts)", sublabel: "e.g., Is victimization associated with concern about crime?", next: "result_chi" }
+    ]
+  },
+  z_samples: {
+    id: "z_samples",
+    question: "How many groups are you comparing?",
+    hint: "Are you comparing your sample proportion to one known population value? Or comparing the proportions of two separate groups?",
+    answers: [
+      { label: "One group — comparing to a known or stated proportion", sublabel: "e.g., Is the proportion of South Asians in this city different from 12%?", next: "result_z1" },
+      { label: "Two groups — comparing proportions between two groups", sublabel: "e.g., Is the proportion who sought treatment different for men vs. women?", next: "result_z2" }
+    ]
+  }
+};
 
-      <!-- Result card (shown at end) -->
-      <div class="result-card hidden" id="result-card">
-        <div class="result-badge" id="result-badge"></div>
-        <h2 class="result-name" id="result-name"></h2>
-        <p class="result-when" id="result-when"></p>
+// ── RESULTS ────────────────────────────────────────────────────────
+const RESULTS = {
+  result_ci_mean: {
+    badge: "CI", badgeClass: "badge-ci",
+    name: "Confidence Interval for a Mean",
+    when: "Use this when you have a numeric outcome and want to estimate the true population mean with a margin of error.",
+    formula: "\\[ \\bar{Y} \\pm t^* \\left( \\frac{s_Y}{\\sqrt{N}} \\right) \\]",
+    formulaSub: "\\( df = N - 1 \\) — look up \\( t^* \\) in the t-table using your df and confidence level",
+    legend: [
+      { sym: "\\( \\bar{Y} \\)",         desc: "Your sample mean — the average you calculated from your data" },
+      { sym: "\\( t^* \\)",              desc: "Critical t-value — from a t-table, based on your confidence level and degrees of freedom" },
+      { sym: "\\( s_Y \\)",              desc: "Sample standard deviation — how spread out the scores are" },
+      { sym: "\\( N \\)",                desc: "Sample size — how many people are in your sample" },
+      { sym: "\\( s_Y / \\sqrt{N} \\)",  desc: "Standard error (SE) — how much the sample mean is expected to vary" },
+      { sym: "\\( df \\)",               desc: "Degrees of freedom = N − 1; used to look up the critical t value" }
+    ],
+    measures: [
+      "Your sample mean \\( (\\bar{Y}) \\) — usually given in the problem",
+      "Sample standard deviation \\( (s_Y) \\) — usually given",
+      "Sample size \\( (N) \\)",
+      "Degrees of freedom: \\( df = N - 1 \\)",
+      "Critical t-value \\( (t^*) \\) — from a t-table at your df and confidence level"
+    ],
+    example: '"Construct a 95% confidence interval for the average burnout score for social workers." A random sample of 100 social workers has a mean score of 10.3, SD = 2.7.',
+    steps: [
+      "Identify your values: \\( \\bar{Y} = 10.3 \\), \\( s_Y = 2.7 \\), \\( N = 100 \\)",
+      "Calculate SE: \\( 2.7 / \\sqrt{100} = 2.7 / 10 = 0.27 \\)",
+      "Find \\( t^* \\): \\( df = 99 \\), 95% CI \\( \\rightarrow t^* \\approx 1.984 \\)",
+      "Margin of error: \\( 1.984 \\times 0.27 = 0.536 \\)",
+      "CI: \\( 10.3 \\pm 0.536 \\rightarrow [9.76,\\ 10.84] \\)"
+    ],
+    interpretation: '"We are 95% confident that the true mean burnout score in the population lies between 9.76 and 10.84."'
+  },
 
-        <!-- Formula section -->
-        <div class="result-formula-wrap">
-          <p class="formula-label">The Formula</p>
-          <div class="formula-box" id="result-formula"></div>
-          <div class="formula-sub-note" id="result-formula-sub"></div>
-        </div>
+  result_ci_prop: {
+    badge: "CI", badgeClass: "badge-ci",
+    name: "Confidence Interval for a Proportion",
+    when: "Use this when you have a yes/no outcome and want to estimate the true population proportion with a margin of error.",
+    formula: "\\[ \\hat{p} \\pm z^* \\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n}} \\]",
+    formulaSub: "\\( z^* = 1.96 \\) for a 95% CI \\(\\quad\\) \\( z^* = 2.576 \\) for a 99% CI",
+    legend: [
+      { sym: "\\( \\hat{p} \\)",                       desc: "Sample proportion — fraction in your sample who said yes (e.g., 240/400 = 0.60)" },
+      { sym: "\\( z^* \\)",                            desc: "Critical z-value — 1.96 for 95% confidence, 2.576 for 99% confidence" },
+      { sym: "\\( n \\)",                              desc: "Sample size — how many people are in your sample" },
+      { sym: "\\( \\hat{p}(1 - \\hat{p}) \\)",         desc: "Variance of the proportion — largest when p̂ = 0.50" },
+      { sym: "\\( \\sqrt{\\hat{p}(1-\\hat{p})/n} \\)", desc: "Standard error — how much the sample proportion is expected to vary" }
+    ],
+    measures: [
+      "Your sample proportion \\( (\\hat{p}) \\) — e.g., count who said yes divided by total",
+      "Sample size \\( (n) \\)",
+      "Critical z-value \\( (z^*) \\) — 1.96 for 95% CI, 2.576 for 99% CI"
+    ],
+    example: '"Estimate the proportion of adults who support the new transit policy, with a 95% confidence interval." Sample: n = 400, 240 support it.',
+    steps: [
+      "Identify: \\( \\hat{p} = 240/400 = 0.60 \\), \\( n = 400 \\)",
+      "Calculate SE: \\( \\sqrt{(0.60 \\times 0.40) / 400} = \\sqrt{0.0006} = 0.0245 \\)",
+      "\\( z^* = 1.96 \\) for 95% CI",
+      "Margin of error: \\( 1.96 \\times 0.0245 = 0.048 \\)",
+      "CI: \\( 0.60 \\pm 0.048 \\rightarrow [0.552,\\ 0.648] \\)"
+    ],
+    interpretation: '"We are 95% confident that the true proportion of adults who support the policy is between 55.2% and 64.8%."'
+  },
 
-        <!-- Formula legend -->
-        <div class="result-legend-wrap" id="result-legend-wrap">
-          <p class="legend-label">📖 What each symbol means</p>
-          <div class="legend-grid" id="result-legend"></div>
-        </div>
+  result_t1: {
+    badge: "t", badgeClass: "badge-t",
+    name: "One-Sample t Test",
+    when: "Use this when you have a numeric outcome and want to test whether your sample mean is significantly different from a known or hypothesized population mean.",
+    formula: "\\[ t = \\frac{\\bar{Y} - \\mu_0}{s_Y / \\sqrt{N}} \\]",
+    formulaSub: "\\( df = N - 1 \\) \\(\\quad\\) Standard Error \\( = s_Y / \\sqrt{N} \\)",
+    legend: [
+      { sym: "\\( t \\)",              desc: "The test statistic you calculate — compare this to the critical value" },
+      { sym: "\\( \\bar{Y} \\)",       desc: "Your sample mean — the average from your data" },
+      { sym: "\\( \\mu_0 \\)",         desc: "The hypothesized population mean stated in H\u2080 (the benchmark you are testing against)" },
+      { sym: "\\( s_Y \\)",            desc: "Your sample standard deviation — how spread out the scores are" },
+      { sym: "\\( N \\)",              desc: "Sample size — how many people are in your sample" },
+      { sym: "\\( s_Y / \\sqrt{N} \\)", desc: "Standard error (SE) — the denominator; how much sampling variation to expect" },
+      { sym: "\\( df \\)",             desc: "Degrees of freedom = N − 1; used to find the critical t-value in a table" }
+    ],
+    measures: [
+      "Your sample mean \\( (\\bar{Y}) \\) — from the data given",
+      "The hypothesized population mean \\( (\\mu_0) \\) — stated in H\u2080",
+      "Sample standard deviation \\( (s_Y) \\)",
+      "Sample size \\( (N) \\)",
+      "Degrees of freedom: \\( df = N - 1 \\)",
+      "Critical t-value from a t-table at your chosen \u03b1 and df"
+    ],
+    example: '"A random sample of 423 Albertans finished an average of 12.7 years of formal education (SD = 1.7). Is this significantly different from the national average of 12.2 years? (\u03b1 = 0.05, two-tailed)"',
+    steps: [
+      "State hypotheses: \\( H_0: \\mu = 12.2 \\); \\( H_A: \\mu \\neq 12.2 \\) (two-tailed)",
+      "\\( \\alpha = 0.05 \\), \\( df = 422 \\); \\( t_{critical} \\approx \\pm 1.966 \\)",
+      "Calculate SE: \\( 1.7 / \\sqrt{423} = 1.7 / 20.57 = 0.083 \\)",
+      "Calculate \\( t_{obtained} = (12.7 - 12.2) / 0.083 = 0.5 / 0.083 = 6.02 \\)",
+      "\\( |6.02| > 1.966 \\) &#8594; Reject \\( H_0 \\)"
+    ],
+    interpretation: '"There is a statistically significant difference between the average years of education for Albertans and the national average (t = 6.02, df = 422, p &lt; 0.05)."'
+  },
 
-        <!-- What you'll need to calculate -->
-        <div class="result-measures-wrap" id="result-measures-wrap">
-          <p class="measures-label">🧮 What you'll need to find or calculate</p>
-          <ul class="measures-list" id="result-measures"></ul>
-        </div>
+  result_t2: {
+    badge: "t", badgeClass: "badge-t",
+    name: "Two-Sample t Test",
+    when: "Use this when you have a numeric outcome and want to compare the means of two independent groups — like men vs. women, or two different cities.",
+    formula: "\\[ t = \\frac{\\bar{Y}_1 - \\bar{Y}_2}{SE_{\\bar{Y}_1 - \\bar{Y}_2}} \\]",
+    formulaSub: "\\( SE = \\sqrt{\\dfrac{s_1^2}{N_1} + \\dfrac{s_2^2}{N_2}} \\) \\(\\quad\\) \\( df = (N_1 - 1) + (N_2 - 1) \\)",
+    legend: [
+      { sym: "\\( t \\)",                               desc: "The test statistic you calculate — compare to the critical t-value" },
+      { sym: "\\( \\bar{Y}_1,\\ \\bar{Y}_2 \\)",        desc: "Sample means for Group 1 and Group 2" },
+      { sym: "\\( s_1^2,\\ s_2^2 \\)",                  desc: "Variances (SD squared) for Group 1 and Group 2" },
+      { sym: "\\( N_1,\\ N_2 \\)",                      desc: "Sample sizes for Group 1 and Group 2" },
+      { sym: "\\( SE_{\\bar{Y}_1 - \\bar{Y}_2} \\)",    desc: "Standard error of the difference — the denominator of the t formula" },
+      { sym: "\\( df \\)",                              desc: "Degrees of freedom = (N\u2081 \u2212 1) + (N\u2082 \u2212 1); used to find critical t" }
+    ],
+    measures: [
+      "Means for both groups: \\( \\bar{Y}_1 \\) and \\( \\bar{Y}_2 \\)",
+      "Standard deviations for both groups: \\( s_1 \\) and \\( s_2 \\)",
+      "Sample sizes for both groups: \\( N_1 \\) and \\( N_2 \\)",
+      "Degrees of freedom: \\( df = (N_1 - 1) + (N_2 - 1) \\)",
+      "Standard error: \\( SE = \\sqrt{s_1^2/N_1 + s_2^2/N_2} \\)",
+      "Critical t-value from a t-table at your chosen \u03b1 and df"
+    ],
+    example: '"Is there a gender difference in job satisfaction? Men (n = 100): mean = 7.0, SD = 1.2. Women (n = 120): mean = 7.5, SD = 1.5. Use \u03b1 = 0.05."',
+    steps: [
+      "State hypotheses: \\( H_0: \\mu_1 = \\mu_2 \\); \\( H_A: \\mu_1 \\neq \\mu_2 \\)",
+      "\\( df = (100-1) + (120-1) = 218 \\); \\( t_{critical} \\approx \\pm 1.971 \\)",
+      "\\( SE = \\sqrt{1.44/100 + 2.25/120} = \\sqrt{0.0144 + 0.01875} = \\sqrt{0.03315} = 0.182 \\)",
+      "\\( t_{obtained} = (7.0 - 7.5) / 0.182 = -0.5 / 0.182 = -2.747 \\)",
+      "\\( |-2.747| > 1.971 \\) &#8594; Reject \\( H_0 \\)"
+    ],
+    interpretation: '"There is a statistically significant difference in job satisfaction between men and women (t = \u22122.747, df = 218, p &lt; 0.05)."'
+  },
 
-        <div class="result-example-wrap" id="result-example-wrap">
-          <p class="example-label">Example question</p>
-          <p class="result-example" id="result-example"></p>
-        </div>
-        <div class="result-steps-wrap" id="result-steps-wrap">
-          <p class="steps-label">Step-by-step solution</p>
-          <ol class="steps-list" id="result-steps"></ol>
-        </div>
-        <div class="result-interp-wrap" id="result-interp-wrap">
-          <p class="interp-label">How to write your conclusion</p>
-          <p class="result-interp" id="result-interp"></p>
-        </div>
-        <div class="result-actions">
-          <button class="btn-primary" id="btn-restart">Start over</button>
-        </div>
-      </div>
-    </section>
+  result_z1: {
+    badge: "z", badgeClass: "badge-z",
+    name: "One-Proportion z Test",
+    when: "Use this when you have a yes/no outcome and want to test whether your sample proportion is significantly different from a known population proportion.",
+    formula: "\\[ z = \\frac{\\hat{p} - \\pi_0}{s_{\\pi_0}} \\]",
+    formulaSub: "\\( s_{\\pi_0} = \\sqrt{\\dfrac{\\pi_0 (1 - \\pi_0)}{n}} \\)",
+    legend: [
+      { sym: "\\( z \\)",           desc: "The test statistic you calculate — compare to the critical z-value" },
+      { sym: "\\( \\hat{p} \\)",    desc: "Your sample proportion — e.g., 0.14 means 14% of your sample had the outcome" },
+      { sym: "\\( \\pi_0 \\)",      desc: "The hypothesized population proportion from H\u2080 — e.g., 0.10 means 10%" },
+      { sym: "\\( s_{\\pi_0} \\)",  desc: "Standard error under H\u2080 — how much sampling variation to expect if H\u2080 is true" },
+      { sym: "\\( n \\)",           desc: "Sample size — how many people are in your sample" }
+    ],
+    measures: [
+      "Your sample proportion \\( (\\hat{p}) \\) — e.g., 74 / 527 = 0.14",
+      "The hypothesized proportion \\( (\\pi_0) \\) — stated in H\u2080",
+      "Sample size \\( (n) \\)",
+      "Standard error: \\( s_{\\pi_0} = \\sqrt{\\pi_0(1 - \\pi_0) / n} \\)",
+      "Critical z-value: \u00b11.96 (two-tailed, \u03b1 = 0.05) or +1.645 (one-tailed, \u03b1 = 0.05)"
+    ],
+    example: '"A survey shows 10% of the population are victims of property crime. A random sample of 527 older adults shows a victimization rate of 14%. Are older people more likely to be victimized? (one-tailed, \u03b1 = 0.05)"',
+    steps: [
+      "State hypotheses: \\( H_0: p = 0.10 \\); \\( H_A: p > 0.10 \\) (one-tailed)",
+      "\\( \\alpha = 0.05 \\), one-tailed; \\( z_{critical} = +1.645 \\)",
+      "\\( s_{\\pi_0} = \\sqrt{0.10 \\times 0.90 / 527} = \\sqrt{0.000171} = 0.01308 \\)",
+      "\\( z_{obtained} = (0.14 - 0.10) / 0.01308 = 0.04 / 0.01308 = 3.059 \\)",
+      "\\( 3.059 > 1.645 \\) &#8594; Reject \\( H_0 \\)"
+    ],
+    interpretation: '"There is sufficient evidence to conclude that older adults are significantly more likely to be victimized than the general population (z = 3.059, p &lt; 0.05)."'
+  },
 
-    <!-- RIGHT: Visual flowchart map -->
-    <aside class="map-col">
-      <p class="map-title">Your path through the flowchart</p>
-      <div class="map-scroll">
-        <svg class="flowmap" id="flowmap" viewBox="0 0 320 500" xmlns="http://www.w3.org/2000/svg">
-          <!-- Drawn by JS -->
-        </svg>
-      </div>
-      <p class="map-hint">Blue = your current path</p>
-    </aside>
+  result_z2: {
+    badge: "z", badgeClass: "badge-z",
+    name: "Two-Proportion z Test",
+    when: "Use this when you have a yes/no outcome and want to compare the proportions of two independent groups.",
+    formula: "\\[ z = \\frac{\\hat{p}_1 - \\hat{p}_2}{SE_{\\hat{p}_1 - \\hat{p}_2}} \\]",
+    formulaSub: "\\( SE = \\sqrt{\\hat{p}(1-\\hat{p})\\left(\\dfrac{1}{n_1} + \\dfrac{1}{n_2}\\right)} \\) where \\( \\hat{p} = \\dfrac{x_1 + x_2}{n_1 + n_2} \\)",
+    legend: [
+      { sym: "\\( z \\)",                              desc: "The test statistic you calculate — compare to the critical z-value" },
+      { sym: "\\( \\hat{p}_1,\\ \\hat{p}_2 \\)",       desc: "Sample proportions for Group 1 and Group 2 (e.g., 30/150 = 0.20)" },
+      { sym: "\\( \\hat{p} \\) (pooled)",              desc: "Pooled proportion — total successes divided by total sample size across both groups" },
+      { sym: "\\( n_1,\\ n_2 \\)",                     desc: "Sample sizes for Group 1 and Group 2" },
+      { sym: "\\( x_1,\\ x_2 \\)",                     desc: "Number of yes responses in each group" },
+      { sym: "\\( SE_{\\hat{p}_1 - \\hat{p}_2} \\)",   desc: "Standard error of the difference between the two proportions" }
+    ],
+    measures: [
+      "Proportions for both groups: \\( \\hat{p}_1 \\) and \\( \\hat{p}_2 \\)",
+      "Sample sizes for both groups: \\( n_1 \\) and \\( n_2 \\)",
+      "Count of successes in each group: \\( x_1 \\) and \\( x_2 \\)",
+      "Pooled proportion: \\( \\hat{p} = (x_1 + x_2) / (n_1 + n_2) \\)",
+      "Standard error using the pooled proportion formula above",
+      "Critical z-value: \u00b11.96 (two-tailed, \u03b1 = 0.05)"
+    ],
+    example: '"Is there a gender difference in seeking mental health treatment? 150 men: 30 sought treatment. 120 women: 60 sought treatment. \u03b1 = 0.05, two-tailed."',
+    steps: [
+      "\\( \\hat{p}_{men} = 30/150 = 0.20 \\); \\( \\hat{p}_{women} = 60/120 = 0.50 \\)",
+      "\\( H_0: p_1 = p_2 \\); \\( H_A: p_1 \\neq p_2 \\); \\( z_{critical} = \\pm 1.96 \\)",
+      "\\( \\hat{p}_{pooled} = (30+60)/(150+120) = 90/270 = 0.333 \\)",
+      "\\( SE = \\sqrt{0.333 \\times 0.667 \\times (1/150 + 1/120)} = \\sqrt{0.222 \\times 0.01500} = 0.0578 \\)",
+      "\\( z = (0.20 - 0.50) / 0.0578 = -5.19 \\); \\( |-5.19| > 1.96 \\) &#8594; Reject \\( H_0 \\)"
+    ],
+    interpretation: '"There is a statistically significant gender difference in seeking mental health treatment — women sought treatment at a significantly higher rate than men (z = \u22125.19, p &lt; 0.05)."'
+  },
 
-  </main>
+  result_chi: {
+    badge: "\u03c7\u00b2", badgeClass: "badge-chi",
+    name: "Chi-Square Test of Association",
+    when: "Use this when both of your variables are categories and your data are in a table of counts (a crosstab or contingency table). You are testing whether the two variables are associated or independent.",
+    formula: "\\[ \\chi^2 = \\sum \\frac{(O - E)^2}{E} \\]",
+    formulaSub: "Expected count: \\( E = \\dfrac{(\\text{row total} \\times \\text{column total})}{\\text{grand total}} \\) \\(\\quad\\) \\( df = (\\text{rows}-1)(\\text{columns}-1) \\)",
+    legend: [
+      { sym: "\\( \\chi^2 \\)", desc: "Chi-square statistic — the larger it is, the more the observed data differs from what you would expect if the variables were unrelated" },
+      { sym: "\\( O \\)",       desc: "Observed count — the actual number in each cell of your table" },
+      { sym: "\\( E \\)",       desc: "Expected count — what the count would be if there were NO relationship between the variables" },
+      { sym: "\\( O - E \\)",   desc: "The difference between what you observed and what you expected in each cell" },
+      { sym: "\\( \\Sigma \\)", desc: "Summation symbol — add up the (O\u2212E)\u00b2/E value for every single cell in the table" },
+      { sym: "\\( df \\)",      desc: "Degrees of freedom = (rows \u2212 1) \u00d7 (columns \u2212 1); used to find the critical chi-square value" }
+    ],
+    measures: [
+      "Observed counts \\( (O) \\) — the number in each cell of your crosstab",
+      "Row totals, column totals, and grand total",
+      "Expected counts \\( (E) \\) for each cell: \\( E = (\\text{row total} \\times \\text{col total}) / \\text{grand total} \\)",
+      "Degrees of freedom: \\( df = (\\text{rows} - 1)(\\text{cols} - 1) \\)",
+      "Critical chi-square value from a \\( \\chi^2 \\) table at your chosen \u03b1 and df"
+    ],
+    example: '"Is there an association between having been a victim of robbery (Yes/No) and concern about crime (Not concerned / Moderately / Very concerned)? (\u03b1 = 0.05)"',
+    steps: [
+      "State hypotheses: H\u2080: victimization and concern are independent; H\u2090: they are associated",
+      "\\( df = (2-1)(3-1) = 2 \\); \\( \\chi^2_{critical} = 5.991 \\)",
+      "Calculate expected count for each cell: \\( E = (\\text{row total} \\times \\text{col total}) / \\text{grand total} \\)",
+      "For each cell, calculate \\( (O - E)^2 / E \\) and sum all cells to get \\( \\chi^2_{obtained} \\)",
+      "If \\( \\chi^2_{obtained} > 5.991 \\) &#8594; Reject H\u2080"
+    ],
+    interpretation: '"There is [not] sufficient evidence of an association between victimization and concern about crime (\u03c7\u00b2 = [value], df = 2, p [&lt;/\u2265] 0.05)."'
+  }
+};
 
-  <footer class="site-footer">
-    <p>Statistical decision flowchart · <em>Measuring the Social World</em></p>
-  </footer>
+// ── FLOWCHART STATE ────────────────────────────────────────────────
+let history = [];
+let current = "root";
 
-  <script src="script.js"></script>
+function isResult(id){ return id.startsWith("result_"); }
+
+function renderStep(nodeId, stepIndex, isActive){
+  const node = NODES[nodeId];
+  if(!node) return null;
+  const div = document.createElement("div");
+  div.className = "step-block" + (isActive ? " active" : " visited");
+
+  const qDiv = document.createElement("div");
+  qDiv.className = "step-question";
+
+  const badge = document.createElement("span");
+  badge.className = "step-badge";
+  badge.textContent = stepIndex + 1;
+  qDiv.appendChild(badge);
+
+  const qText = document.createElement("div");
+  qText.className = "step-q-text";
+  const q = document.createElement("p");
+  q.className = "step-q-main";
+  q.textContent = node.question;
+  qText.appendChild(q);
+  if(node.hint){
+    const hint = document.createElement("p");
+    hint.className = "step-hint";
+    hint.textContent = node.hint;
+    qText.appendChild(hint);
+  }
+  qDiv.appendChild(qText);
+  div.appendChild(qDiv);
+
+  const answersDiv = document.createElement("div");
+  answersDiv.className = "step-answers";
+  node.answers.forEach((ans) => {
+    const btn = document.createElement("button");
+    btn.className = "answer-btn";
+    btn.dataset.next = ans.next;
+    const lbl = document.createElement("span");
+    lbl.className = "answer-label";
+    lbl.textContent = ans.label;
+    btn.appendChild(lbl);
+    if(ans.sublabel){
+      const sub = document.createElement("span");
+      sub.className = "answer-sublabel";
+      sub.textContent = ans.sublabel;
+      btn.appendChild(sub);
+    }
+    if(isActive){
+      btn.addEventListener("click", () => handleAnswer(ans.next, btn));
+    } else {
+      btn.disabled = true;
+      const chosenNext = history[stepIndex + 1];
+      if(chosenNext === ans.next) btn.classList.add("chosen");
+    }
+    answersDiv.appendChild(btn);
+  });
+  div.appendChild(answersDiv);
+  return div;
+}
+
+function handleAnswer(nextId, btn){
+  btn.closest(".step-answers").querySelectorAll(".answer-btn").forEach(b => { b.classList.remove("chosen"); b.disabled = true; });
+  btn.classList.add("chosen");
+  btn.closest(".step-block").classList.remove("active");
+  btn.closest(".step-block").classList.add("visited");
+  history.push(nextId);
+  current = nextId;
+  if(isResult(nextId)){ showResult(nextId); } else { addNextStep(nextId); }
+  updateProgress();
+  drawFlowmap();
+}
+
+function addNextStep(nodeId){
+  const stack = document.getElementById("step-stack");
+  const el = renderStep(nodeId, history.length - 1, true);
+  if(el){ stack.appendChild(el); setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 100); }
+}
+
+function showResult(resultId){
+  const r = RESULTS[resultId];
+  if(!r) return;
+  const rc = document.getElementById("result-card");
+
+  document.getElementById("result-badge").className = "result-badge " + r.badgeClass;
+  document.getElementById("result-badge").textContent = r.badge;
+  document.getElementById("result-name").textContent = r.name;
+  document.getElementById("result-when").textContent = r.when;
+
+  document.getElementById("result-formula").innerHTML = r.formula;
+  const fsub = document.getElementById("result-formula-sub");
+  fsub.innerHTML = r.formulaSub || "";
+  fsub.style.display = r.formulaSub ? "block" : "none";
+
+  const legendGrid = document.getElementById("result-legend");
+  legendGrid.innerHTML = "";
+  (r.legend || []).forEach(item => {
+    const row = document.createElement("div");
+    row.className = "legend-row";
+    const sym = document.createElement("span");
+    sym.className = "legend-sym";
+    sym.innerHTML = item.sym;
+    const desc = document.createElement("span");
+    desc.className = "legend-desc";
+    desc.textContent = item.desc;
+    row.appendChild(sym); row.appendChild(desc);
+    legendGrid.appendChild(row);
+  });
+
+  const measuresList = document.getElementById("result-measures");
+  measuresList.innerHTML = "";
+  (r.measures || []).forEach(m => {
+    const li = document.createElement("li");
+    li.innerHTML = m;
+    measuresList.appendChild(li);
+  });
+
+  document.getElementById("result-example").textContent = r.example;
+
+  const stepsList = document.getElementById("result-steps");
+  stepsList.innerHTML = "";
+  r.steps.forEach(s => {
+    const li = document.createElement("li");
+    li.innerHTML = s;
+    stepsList.appendChild(li);
+  });
+
+  document.getElementById("result-interp").innerHTML = r.interpretation;
+
+  rc.classList.remove("hidden");
+  rc.classList.add("visible");
+
+  if(window.MathJax && window.MathJax.typesetPromise){
+    window.MathJax.typesetPromise([rc]).then(() => {
+      setTimeout(() => rc.scrollIntoView({behavior:"smooth",block:"start"}), 80);
+    });
+  } else {
+    setTimeout(() => rc.scrollIntoView({behavior:"smooth",block:"start"}), 200);
+  }
+}
+
+function updateProgress(){
+  const pct = Math.min(100, Math.round((history.length / 4) * 100));
+  document.getElementById("progress-bar").style.width = pct + "%";
+  document.getElementById("progress-label").textContent = "Step " + history.length + " of ~4";
+}
+
+function resetAll(){
+  history = []; current = "root";
+  document.getElementById("step-stack").innerHTML = "";
+  const rc = document.getElementById("result-card");
+  rc.classList.add("hidden"); rc.classList.remove("visible");
+  document.getElementById("progress-bar").style.width = "0%";
+  document.getElementById("progress-label").textContent = "Step 1 of ~4";
+  const first = renderStep("root", 0, true);
+  if(first) document.getElementById("step-stack").appendChild(first);
+  history.push("root");
+  drawFlowmap();
+}
+
+// ── FLOWMAP ────────────────────────────────────────────────────────
+const LAYOUT = [
+  { id:"root",           label:"Estimating or Testing?",     x:120, y:10,  w:200, h:40, type:"start" },
+  { id:"ci_branch",      label:"CI: Mean or Proportion?",    x:10,  y:100, w:170, h:40, type:"node" },
+  { id:"outcome_type",   label:"Numeric or Categorical?",    x:260, y:100, w:170, h:40, type:"node" },
+  { id:"result_ci_mean", label:"CI for a Mean",              x:5,   y:200, w:90,  h:36, type:"result-ci" },
+  { id:"result_ci_prop", label:"CI for a Proportion",        x:105, y:200, w:90,  h:36, type:"result-ci" },
+  { id:"t_samples",      label:"One or Two Samples?",        x:245, y:200, w:180, h:40, type:"node" },
+  { id:"result_t1",      label:"One-Sample t Test",          x:230, y:300, w:95,  h:36, type:"result-t" },
+  { id:"result_t2",      label:"Two-Sample t Test",          x:340, y:300, w:95,  h:36, type:"result-t" },
+  { id:"z_or_chi",       label:"Proportion or Both Categ.?", x:230, y:400, w:180, h:40, type:"node" },
+  { id:"z_samples",      label:"One or Two Samples?",        x:215, y:500, w:180, h:40, type:"node" },
+  { id:"result_chi",     label:"Chi-Square Test",            x:345, y:460, w:90,  h:36, type:"result-chi" },
+  { id:"result_z1",      label:"One-Prop z Test",            x:210, y:596, w:90,  h:36, type:"result-z" },
+  { id:"result_z2",      label:"Two-Prop z Test",            x:315, y:596, w:90,  h:36, type:"result-z" },
+];
+
+const EDGES = [
+  ["root","ci_branch"],["root","outcome_type"],
+  ["ci_branch","result_ci_mean"],["ci_branch","result_ci_prop"],
+  ["outcome_type","t_samples"],["outcome_type","z_or_chi"],
+  ["t_samples","result_t1"],["t_samples","result_t2"],
+  ["z_or_chi","z_samples"],["z_or_chi","result_chi"],
+  ["z_samples","result_z1"],["z_samples","result_z2"],
+];
+
+const COLORS = {
+  start:       {fill:"#1e3a5f",stroke:"#1e3a5f",text:"#fff"},
+  node:        {fill:"#f0f4ff",stroke:"#4a6fa5",text:"#1e3a5f"},
+  "result-ci": {fill:"#e8f5e9",stroke:"#2e7d32",text:"#1b5e20"},
+  "result-t":  {fill:"#fff3e0",stroke:"#e65100",text:"#bf360c"},
+  "result-z":  {fill:"#e3f2fd",stroke:"#1565c0",text:"#0d47a1"},
+  "result-chi":{fill:"#f3e5f5",stroke:"#6a1b9a",text:"#4a148c"},
+};
+
+function drawFlowmap(){
+  const svg = document.getElementById("flowmap");
+  svg.innerHTML = "";
+  const active = new Set(history);
+  const byId = {};
+  LAYOUT.forEach(n => byId[n.id] = n);
+
+  // defs / glow
+  const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
+  defs.innerHTML = '<filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+  svg.appendChild(defs);
+
+  // edges
+  EDGES.forEach(([fId,tId]) => {
+    const f = byId[fId], t = byId[tId];
+    if(!f||!t) return;
+    const isAct = active.has(fId) && active.has(tId);
+    const x1=f.x+f.w/2, y1=f.y+f.h, x2=t.x+t.w/2, y2=t.y, my=(y1+y2)/2;
+    const mid = `M ${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`;
+    const mId = "m_"+fId+"_"+tId;
+    const mk = document.createElementNS("http://www.w3.org/2000/svg","marker");
+    mk.setAttribute("id",mId); mk.setAttribute("markerWidth","7"); mk.setAttribute("markerHeight","7");
+    mk.setAttribute("refX","3.5"); mk.setAttribute("refY","3.5"); mk.setAttribute("orient","auto");
+    const poly = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    poly.setAttribute("points","0 0, 7 3.5, 0 7");
+    poly.setAttribute("fill", isAct ? "#2347a8" : "#c0c8da");
+    mk.appendChild(poly); svg.appendChild(mk);
+    const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+    path.setAttribute("d",mid); path.setAttribute("fill","none");
+    path.setAttribute("stroke", isAct ? "#2347a8" : "#d1d9e6");
+    path.setAttribute("stroke-width", isAct ? "2.5" : "1.5");
+    path.setAttribute("stroke-dasharray", isAct ? "none" : "4 3");
+    path.setAttribute("marker-end","url(#"+mId+")");
+    svg.appendChild(path);
+  });
+
+  // nodes
+  LAYOUT.forEach(n => {
+    const c = COLORS[n.type] || COLORS.node;
+    const isAct = active.has(n.id);
+    const isCur = history[history.length-1] === n.id;
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    rect.setAttribute("x",n.x); rect.setAttribute("y",n.y);
+    rect.setAttribute("width",n.w); rect.setAttribute("height",n.h);
+    rect.setAttribute("rx","7");
+    rect.setAttribute("fill", isAct ? (isCur ? "#2347a8" : c.fill) : "#f8f9fc");
+    rect.setAttribute("stroke", isAct ? (isCur ? "#2347a8" : c.stroke) : "#e0e4ef");
+    rect.setAttribute("stroke-width", isAct ? "2.5" : "1.5");
+    if(isCur) rect.setAttribute("filter","url(#glow)");
+    g.appendChild(rect);
+
+    const words = n.label.split(" ");
+    const lines = []; let line = "";
+    words.forEach(w => {
+      if((line+w).length > 16 && line !== ""){ lines.push(line.trim()); line = w+" "; }
+      else { line += w+" "; }
+    });
+    if(line.trim()) lines.push(line.trim());
+
+    const textColor = isAct ? (isCur ? "#fff" : c.text) : "#9ca3af";
+    const lh = 11, totalH = lines.length * lh;
+    const startY = n.y + n.h/2 - totalH/2 + lh*0.75;
+    lines.forEach((l,i) => {
+      const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+      txt.setAttribute("x", n.x+n.w/2); txt.setAttribute("y", startY+i*lh);
+      txt.setAttribute("text-anchor","middle"); txt.setAttribute("font-size","9");
+      txt.setAttribute("font-family","DM Sans, sans-serif");
+      txt.setAttribute("font-weight", isAct ? "700" : "400");
+      txt.setAttribute("fill",textColor);
+      txt.textContent = l;
+      g.appendChild(txt);
+    });
+    svg.appendChild(g);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  resetAll();
+  document.getElementById("btn-reset").addEventListener("click", resetAll);
+  document.getElementById("btn-restart").addEventListener("click", resetAll);
+});
+</script>
 </body>
 </html>
