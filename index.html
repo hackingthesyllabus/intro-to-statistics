@@ -3,21 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Which Statistical Test? — SOC222</title>
+  <title>Which Statistical Test Should I Use?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- MathJax for proper formula rendering -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        packages: {'[+]': ['ams']}
+      },
+      options: {
+        skipHtmlTags: ['script','noscript','style','textarea','pre']
+      },
+      startup: {
+        ready() {
+          MathJax.startup.defaultReady();
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
 </head>
 <body>
 
   <header class="site-header">
     <div class="header-inner">
-      <p class="eyebrow">SOC222 · Statistical Decision Tool</p>
-      <h1>Which Test Do I Use?</h1>
-      <p class="tagline">Follow the flowchart step-by-step. Click each answer to move forward.</p>
+      <h1>Which Statistical Test Do I Use?</h1>
+      <p class="tagline">Answer a few plain-English questions and we'll point you to the right test — with the formula, a worked example, and everything you need to interpret your results.</p>
       <div class="header-actions">
-        <a href="reference.html" class="btn-secondary">📄 Full Formula Reference</a>
         <button class="btn-ghost" id="btn-reset">↩ Start over</button>
       </div>
     </div>
@@ -29,7 +47,7 @@
     <section class="walker-col">
       <div class="progress-bar-wrap">
         <div class="progress-bar" id="progress-bar"></div>
-        <span class="progress-label" id="progress-label">Step 1 of 4</span>
+        <span class="progress-label" id="progress-label">Step 1 of ~4</span>
       </div>
 
       <div class="step-stack" id="step-stack">
@@ -41,45 +59,59 @@
         <div class="result-badge" id="result-badge"></div>
         <h2 class="result-name" id="result-name"></h2>
         <p class="result-when" id="result-when"></p>
+
+        <!-- Formula section -->
         <div class="result-formula-wrap">
-          <p class="formula-label">Formula</p>
+          <p class="formula-label">The Formula</p>
           <div class="formula-box" id="result-formula"></div>
-          <p class="formula-sub" id="result-formula-sub"></p>
+          <div class="formula-sub-note" id="result-formula-sub"></div>
         </div>
+
+        <!-- Formula legend -->
+        <div class="result-legend-wrap" id="result-legend-wrap">
+          <p class="legend-label">📖 What each symbol means</p>
+          <div class="legend-grid" id="result-legend"></div>
+        </div>
+
+        <!-- What you'll need to calculate -->
+        <div class="result-measures-wrap" id="result-measures-wrap">
+          <p class="measures-label">🧮 What you'll need to find or calculate</p>
+          <ul class="measures-list" id="result-measures"></ul>
+        </div>
+
         <div class="result-example-wrap" id="result-example-wrap">
-          <p class="example-label">Example question cue</p>
+          <p class="example-label">Example question</p>
           <p class="result-example" id="result-example"></p>
         </div>
         <div class="result-steps-wrap" id="result-steps-wrap">
-          <p class="steps-label">Five-step model</p>
+          <p class="steps-label">Step-by-step solution</p>
           <ol class="steps-list" id="result-steps"></ol>
         </div>
         <div class="result-interp-wrap" id="result-interp-wrap">
-          <p class="interp-label">How to state your conclusion</p>
+          <p class="interp-label">How to write your conclusion</p>
           <p class="result-interp" id="result-interp"></p>
         </div>
         <div class="result-actions">
           <button class="btn-primary" id="btn-restart">Start over</button>
-          <a href="reference.html" class="btn-secondary">Full reference →</a>
         </div>
       </div>
     </section>
 
     <!-- RIGHT: Visual flowchart map -->
     <aside class="map-col">
-      <p class="map-title">Flowchart map</p>
+      <p class="map-title">Your path through the flowchart</p>
       <div class="map-scroll">
-        <svg class="flowmap" id="flowmap" viewBox="0 0 320 700" xmlns="http://www.w3.org/2000/svg">
+        <svg class="flowmap" id="flowmap" viewBox="0 0 320 500" xmlns="http://www.w3.org/2000/svg">
           <!-- Drawn by JS -->
         </svg>
       </div>
-      <p class="map-hint">Highlighted in blue = your current path</p>
+      <p class="map-hint">Blue = your current path</p>
     </aside>
 
   </main>
 
   <footer class="site-footer">
-    <p>SOC222 · <em>Measuring the Social World</em> · Decision flowchart for choosing statistical tests</p>
+    <p>Statistical decision flowchart · <em>Measuring the Social World</em></p>
   </footer>
 
   <script src="script.js"></script>
