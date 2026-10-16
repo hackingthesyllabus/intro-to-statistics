@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulas — SOC222 Statistical Decision Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="pages.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] },
+      startup: {
+        ready() {
+          MathJax.startup.defaultReady();
+          if (window.onMathReady) window.onMathReady();
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">SOC222 · Statistical Decision Tool</p>
+      <h1>How the formulas connect</h1>
+      <p class="tagline">Most tests in this course are built from the same three pieces: an estimate, a standard error and a critical value.</p>
+    </div>
+  </header>
+
+  <nav class="tabnav" aria-label="Site sections">
+    <div class="tabnav-inner">
+      <a class="tab" href="index.html">Decision tree</a>
+      <a class="tab" href="symbols.html">Symbols</a>
+      <a class="tab active" href="formulas.html" aria-current="page">Formulas</a>
+      <a class="tab" href="reference.html">Formula reference</a>
+      <a class="tab" href="practice.html">Practice (100)</a>
+    </div>
+  </nav>
+
+  <main class="page-main">
+    <p class="page-intro">Click any box in the map to see its formula, what it means in plain language, and when you would use it. The library below lists every formula in the course, with the situation where each one applies.</p>
+
+    <h2 class="section-title">Relationship map</h2>
+    <div class="map-layout">
+      <div>
+        <div class="map-panel">
+          <svg class="map-svg" id="map" viewBox="0 0 920 650" role="img" aria-label="Diagram of how formulas relate"></svg>
+        </div>
+        <p class="page-intro" style="font-size:13px;margin:10px 0 0">Solid arrows show what each formula is built from. Dashed arrows bring in a value from H₀ or a critical value table.</p>
+      </div>
+      <aside class="detail" id="detail" aria-live="polite">
+        <h3>Start here</h3>
+        <p>Click any box on the map. Begin with <strong>Population</strong> and <strong>Sample</strong>, then follow the arrows to the standard error, the critical value and the decision.</p>
+      </aside>
+    </div>
+
+    <h2 class="section-title">Formula library</h2>
+    <div class="lib-grid" id="library"></div>
+  </main>
+
+  <footer class="site-footer">
+    <p>SOC222 · Formulas · Course text: <em>Social Statistics for a Diverse Society</em> (Frankfort-Nachmias et al., 10th ed.)</p>
+  </footer>
+
+  <script src="formulas.js"></script>
+</body>
+</html>

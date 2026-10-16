@@ -4,7 +4,7 @@
 const TREE = {
   id: "root",
   question: "What's the goal of your analysis?",
-  hint: "Are you trying to estimate something (like "what is the average?"), or test a claim (like "is this different from the national average?")?",
+  hint: "Are you trying to estimate something (like 'what is the average?'), or test a claim (like 'is this different from the national average?')?",
   answers: [
     {
       label: "I want to estimate a population value",
@@ -61,7 +61,7 @@ const NODES = {
   t_samples: {
     id: "t_samples",
     question: "How many groups are you comparing?",
-    hint: "Are you comparing your one sample to a known benchmark (like a national average)? Or are you comparing two separate groups to each other (like men vs. women)?",
+    hint: "Are you comparing your one sample to a known benchmark (like a national average)? Or are you comparing two separate groups to each other (like men vs. women)? This tool covers one- and two-group comparisons. Three or more group means need ANOVA, which the course schedule skips.",
     answers: [
       {
         label: "One group — comparing to a known or official value",
@@ -78,16 +78,16 @@ const NODES = {
 
   z_or_chi: {
     id: "z_or_chi",
-    question: "Are both of your variables categories, or just the outcome?",
-    hint: "Chi-square is used when you have a table of counts — two categorical variables crossed together (like a crosstab). If you're just testing one proportion or comparing two proportions, use a z test.",
+    question: "Are you comparing proportions, or testing whether two categorical variables are related?",
+    hint: "Use a z test to compare one proportion with a known value, or to compare yes/no proportions between two groups (for a 2×2 table, z and chi-square give the same conclusion). Use chi-square to test whether two categorical variables are related in a table of counts, especially when either has three or more categories.",
     answers: [
       {
-        label: "Just the outcome is a category — I'm testing a proportion",
+        label: "I'm comparing proportions (one group vs. a known value, or two groups)",
         sublabel: "e.g., is the poverty rate below 5%? Is there a gender gap in treatment-seeking?",
         next: "z_samples"
       },
       {
-        label: "Both variables are categories — I have a crosstab (table of counts)",
+        label: "I'm testing whether two categorical variables are related (a table of counts)",
         sublabel: "e.g., is victimization associated with concern about crime?",
         next: "result_chi"
       }
@@ -163,7 +163,7 @@ const RESULTS = {
       { sym: "\\(\\hat{p}\\)",                    desc: "Sample proportion — the fraction in your sample who said yes (e.g., 240/400 = 0.60)" },
       { sym: "\\(z^*\\)",                         desc: "Critical z-value — 1.96 for 95% confidence, 2.576 for 99% confidence" },
       { sym: "\\(n\\)",                           desc: "Sample size — how many people are in your sample" },
-      { sym: "\\(\\hat{p}(1-\\hat{p})\\)",        desc: "Variance of the proportion — measures spread; largest when p̂ = 0.50" },
+      { sym: "\\(\\hat{p}(1-\\hat{p})\\)",        desc: "p̂(1 − p̂) is the Bernoulli variance for one yes/no response (largest at p̂ = 0.50); the variance of p̂ itself is this divided by n" },
       { sym: "\\(\\sqrt{\\hat{p}(1-\\hat{p})/n}\\)", desc: "Standard error — how much the sample proportion is expected to vary" },
     ],
     measures: [
@@ -209,12 +209,12 @@ const RESULTS = {
     example: "\"A random sample of 423 Albertans has finished an average of 12.7 years of formal education (SD = 1.7). Is this significantly different from the national average of 12.2 years? (α = 0.05, two-tailed)\"",
     steps: [
       "State hypotheses: \\(H_0: \\mu = 12.2\\); \\(H_A: \\mu \\neq 12.2\\) (two-tailed)",
-      "\\(\\alpha = 0.05\\), \\(df = 422\\); \\(t_{critical} \\approx \\pm 1.966\\)",
-      "Calculate SE: \\(s_Y / \\sqrt{N} = 1.7 / \\sqrt{423} = 1.7 / 20.57 = 0.083\\)",
-      "Calculate \\(t_{obtained} = (12.7 - 12.2) / 0.083 = 0.5 / 0.083 = 6.02\\)",
-      "\\(|6.02| > 1.966\\) → Reject \\(H_0\\)"
+      "\\(\\alpha = 0.05\\), \\(df = 422\\). The table has no row for 422, so use the next row down, \\(df = 120\\): \\(t_{critical} \\approx \\pm 1.980\\)",
+      "Calculate SE: \\(s_Y / \\sqrt{N} = 1.7 / \\sqrt{423} = 1.7 / 20.57 = 0.0826\\)",
+      "Calculate \\(t_{obtained} = (12.7 - 12.2) / 0.0826 = 0.5 / 0.0826 = 6.05\\)",
+      "\\(|6.05| > 1.980\\) → Reject \\(H_0\\)"
     ],
-    interpretation: "\"There is a statistically significant difference between the average years of education for Albertans and the national average (t = 6.02, df = 422, p < 0.05).\""
+    interpretation: "\"There is a statistically significant difference between the average years of education for Albertans and the national average (t = 6.05, df = 422, p < .001).\""
   },
 
   result_t2: {
@@ -223,32 +223,32 @@ const RESULTS = {
     name: "Two-Sample t Test",
     when: "Use this when you have a numeric outcome and want to compare the means of two independent groups — like men vs. women, or two different cities.",
     formulaLatex: `\\[ t = \\frac{\\bar{Y}_1 - \\bar{Y}_2}{SE_{\\bar{Y}_1 - \\bar{Y}_2}} \\]`,
-    formulaSubLatex: `\\(SE_{\\bar{Y}_1 - \\bar{Y}_2} = \\sqrt{\\dfrac{s_1^2}{N_1} + \\dfrac{s_2^2}{N_2}}\\) \\(\\quad\\) \\(df = (N_1 - 1) + (N_2 - 1)\\)`,
+    formulaSubLatex: `\\(SE_{\\bar{Y}_1 - \\bar{Y}_2} = \\sqrt{\\dfrac{s_1^2}{N_1} + \\dfrac{s_2^2}{N_2}}\\) \\(\\quad\\) \\(df_{Welch} \\approx \\dfrac{(a+b)^2}{a^2/(N_1-1) + b^2/(N_2-1)}\\), with \\(a = s_1^2/N_1\\), \\(b = s_2^2/N_2\\)`,
     legend: [
       { sym: "\\(t\\)",                                    desc: "The test statistic you calculate — compare to critical value" },
       { sym: "\\(\\bar{Y}_1,\\ \\bar{Y}_2\\)",            desc: "The sample means for Group 1 and Group 2" },
       { sym: "\\(s_1^2,\\ s_2^2\\)",                      desc: "The variances (SD squared) for Group 1 and Group 2" },
       { sym: "\\(N_1,\\ N_2\\)",                          desc: "Sample sizes for Group 1 and Group 2" },
       { sym: "\\(SE_{\\bar{Y}_1 - \\bar{Y}_2}\\)",        desc: "Standard error of the difference — the denominator of the t formula" },
-      { sym: "\\(df\\)",                                   desc: "Degrees of freedom = (N₁ − 1) + (N₂ − 1); used to find critical t" },
+      { sym: "\\(df\\)",                                   desc: "Welch degrees of freedom for unequal variances; used to find critical t" },
     ],
     measures: [
       "Means for both groups: \\(\\bar{Y}_1\\) and \\(\\bar{Y}_2\\)",
       "Standard deviations for both groups: \\(s_1\\) and \\(s_2\\)",
       "Sample sizes for both groups: \\(N_1\\) and \\(N_2\\)",
-      "Degrees of freedom: \\(df = (N_1 - 1) + (N_2 - 1)\\)",
+      "Welch degrees of freedom (unequal variances), shown in the formula above",
       "Standard error: \\(SE = \\sqrt{s_1^2/N_1 + s_2^2/N_2}\\)",
       "Critical t-value from a t-table at your chosen α and df",
     ],
     example: "\"Is there a gender difference in job satisfaction? Men (n = 100): mean = 7.0, SD = 1.2. Women (n = 120): mean = 7.5, SD = 1.5. Use α = 0.05.\"",
     steps: [
       "State hypotheses: \\(H_0: \\mu_{men} = \\mu_{women}\\); \\(H_A: \\mu_{men} \\neq \\mu_{women}\\)",
-      "\\(df = (100-1) + (120-1) = 218\\); \\(t_{critical} \\approx \\pm 1.971\\)",
+      "Welch \\(df \\approx 217.7\\). The table has no row for 217, so use the next row down, \\(df = 120\\): \\(t_{critical} \\approx \\pm 1.980\\)",
       "SE \\(= \\sqrt{1.44/100 + 2.25/120} = \\sqrt{0.0144 + 0.01875} = \\sqrt{0.03315} = 0.182\\)",
       "\\(t_{obtained} = (7.0 - 7.5) / 0.182 = -0.5 / 0.182 = -2.747\\)",
-      "\\(|-2.747| > 1.971\\) → Reject \\(H_0\\)"
+      "\\(|-2.747| > 1.980\\) → Reject \\(H_0\\)"
     ],
-    interpretation: "\"There is a statistically significant difference in job satisfaction between men and women (t = −2.747, df = 218, p < 0.05).\""
+    interpretation: "\"There is a statistically significant difference in job satisfaction between men and women (t = −2.747, Welch df ≈ 218, p < .01).\""
   },
 
   result_z1: {
@@ -266,21 +266,21 @@ const RESULTS = {
       { sym: "\\(n\\)",           desc: "Sample size — how many people are in your sample" },
     ],
     measures: [
-      "Your sample proportion (\\(\\hat{p}\\)) — e.g., 74/527 = 0.14",
+      "Your sample proportion (\\(\\hat{p}\\)) — e.g., 74/527 = 0.1404",
       "The hypothesized proportion (\\(\\pi_0\\)) — stated in H₀",
       "Your sample size (\\(n\\))",
       "Standard error: \\(s_{\\pi_0} = \\sqrt{\\pi_0(1-\\pi_0)/n}\\)",
       "Critical z-value: ±1.96 (two-tailed, α = 0.05), +1.645 (one-tailed, α = 0.05)",
     ],
-    example: "\"A survey shows that 10% of the population are victims of property crime each year. A random sample of 527 older adults shows a victimization rate of 14%. Are older people more likely to be victimized? (one-tailed, α = 0.05)\"",
+    example: "\"A survey shows that 10% of the population are victims of property crime each year. A random sample of 527 older adults shows that 74 of them (about 14%) were victimized. Are older people more likely to be victimized? (one-tailed, α = 0.05)\"",
     steps: [
       "State hypotheses: \\(H_0: p = 0.10\\); \\(H_A: p > 0.10\\) (one-tailed)",
       "\\(\\alpha = 0.05\\), one-tailed; \\(z_{critical} = +1.645\\)",
-      "\\(s_{\\pi_0} = \\sqrt{0.10 \\times 0.90 / 527} = \\sqrt{0.000171} = 0.01308\\)",
-      "\\(z_{obtained} = (0.14 - 0.10) / 0.01308 = 0.04 / 0.01308 = 3.059\\)",
-      "\\(3.059 > 1.645\\) → Reject \\(H_0\\)"
+      "\\(s_{\\pi_0} = \\sqrt{0.10 \\times 0.90 / 527} = \\sqrt{0.000171} = 0.01307\\)",
+      "\\(z_{obtained} = (0.1404 - 0.10) / 0.01307 = 0.0404 / 0.01307 = 3.09\\)",
+      "\\(3.09 > 1.645\\) → Reject \\(H_0\\)"
     ],
-    interpretation: "\"There is sufficient evidence to conclude that older adults are significantly more likely to be victimized than the general population (z = 3.059, p < 0.05).\""
+    interpretation: "\"There is sufficient evidence to conclude that older adults are significantly more likely to be victimized than the general population (z = 3.09, p ≈ .001, one-tailed).\""
   },
 
   result_z2: {
@@ -311,43 +311,44 @@ const RESULTS = {
       "\\(\\hat{p}_{men} = 30/150 = 0.20\\); \\(\\hat{p}_{women} = 60/120 = 0.50\\)",
       "\\(H_0: p_1 = p_2\\); \\(H_A: p_1 \\neq p_2\\); \\(z_{critical} = \\pm 1.96\\)",
       "\\(\\hat{p}_{pooled} = (30+60)/(150+120) = 90/270 = 0.333\\)",
-      "\\(SE = \\sqrt{0.333 \\times 0.667 \\times (1/150 + 1/120)} = \\sqrt{0.222 \\times 0.01500} = 0.0578\\)",
-      "\\(z = (0.20 - 0.50) / 0.0578 = -5.19\\); \\(|-5.19| > 1.96\\) → Reject \\(H_0\\)"
+      "\\(SE = \\sqrt{0.333 \\times 0.667 \\times (1/150 + 1/120)} = \\sqrt{0.222 \\times 0.01500} = 0.0577\\)",
+      "\\(z = (0.20 - 0.50) / 0.0577 = -5.20\\); \\(|-5.20| > 1.96\\) → Reject \\(H_0\\)"
     ],
-    interpretation: "\"There is a statistically significant gender difference in seeking mental health treatment — women sought treatment at a significantly higher rate than men (z = −5.19, p < 0.05).\""
+    interpretation: "\"There is a statistically significant gender difference in seeking mental health treatment — women sought treatment at a significantly higher rate than men (z = −5.20, p < .001).\""
   },
 
   result_chi: {
     badge: "χ²",
     badgeClass: "badge-chi",
     name: "Chi-Square Test of Association",
-    when: "Use this when both of your variables are categories and your data are in a table of counts (a crosstab). You're testing whether the two variables are associated with each other, or just independent by chance.",
+    when: "Use this when two categorical variables are arranged in a table of counts (a crosstab) and you want to know whether they are associated or independent by chance. The test is non-directional.",
     formulaLatex: `\\[ \\chi^2 = \\sum \\frac{(O - E)^2}{E} \\]`,
-    formulaSubLatex: `Expected count: \\(E = \\dfrac{(\\text{row total} \\times \\text{column total})}{\\text{grand total}}\\) \\(\\quad\\) \\(df = (\\text{rows}-1)(\\text{columns}-1)\\)`,
+    formulaSubLatex: `Expected count: \\(E = \\dfrac{(\\text{row total} \\times \\text{column total})}{N}\\) \\(\\quad\\) \\(df = (r-1)(c-1)\\)`,
     legend: [
-      { sym: "\\(\\chi^2\\)",  desc: "Chi-square statistic — the larger it is, the more the observed data differs from what you'd expect under H₀" },
-      { sym: "\\(O\\)",        desc: "Observed count — the actual number in each cell of your table" },
-      { sym: "\\(E\\)",        desc: "Expected count — what the count would be if there were NO relationship between the variables" },
-      { sym: "\\(O - E\\)",    desc: "The difference between what you observed and what you expected in each cell" },
-      { sym: "\\(\\Sigma\\)",  desc: "Summation — add up the (O−E)²/E value for every cell in the table" },
-      { sym: "\\(df\\)",       desc: "Degrees of freedom = (rows − 1) × (columns − 1); used to find the critical chi-square value" },
+      { sym: "\\(\\chi^2\\)", desc: "Chi-square statistic: the larger it is, the more observed counts differ from what independence predicts" },
+      { sym: "\\(O\\)", desc: "Observed count: the number actually in each cell of your table" },
+      { sym: "\\(E\\)", desc: "Expected count: the count you would see if the two variables were independent" },
+      { sym: "\\(O - E\\)", desc: "The difference between observed and expected in each cell" },
+      { sym: "\\(\\Sigma\\)", desc: "Summation: add (O − E)²/E over every cell" },
+      { sym: "\\(df\\)", desc: "Degrees of freedom = (r − 1)(c − 1), where r = rows and c = columns" },
     ],
     measures: [
-      "Your observed counts (\\(O\\)) — from each cell of your crosstab",
-      "Row totals, column totals, and grand total — to calculate expected counts",
-      "Expected counts (\\(E\\)) for each cell: \\(E = (row\\ total \\times col\\ total) / grand\\ total\\)",
-      "Degrees of freedom: \\(df = (rows - 1)(cols - 1)\\)",
+      "Observed counts (\\(O\\)) in each cell of the crosstab",
+      "Row totals, column totals and the grand total \\(N\\)",
+      "Expected counts (\\(E\\)) for each cell: \\(E = (\\text{row total} \\times \\text{column total}) / N\\)",
+      "Degrees of freedom: \\(df = (r-1)(c-1)\\)",
       "Critical chi-square value from a \\(\\chi^2\\) table at your chosen α and df",
     ],
-    example: "\"Is there an association between having been a victim of robbery (Yes/No) and concern about crime (Not concerned / Moderately / Very concerned)? (α = 0.05)\"",
+    example: "\"Among 300 residents, 100 reported being a robbery victim and 200 did not. Each person rated their concern about crime as not concerned, moderately concerned or very concerned. Observed counts: victims 20 / 30 / 50; non-victims 80 / 70 / 50. Is victimization associated with concern? (α = 0.05)\"",
     steps: [
       "State hypotheses: \\(H_0\\): victimization and concern are independent; \\(H_A\\): they are associated",
-      "\\(df = (2-1)(3-1) = 2\\); \\(\\chi^2_{critical} = 5.991\\)",
-      "Calculate expected count for each cell: \\(E = (\\text{row total} \\times \\text{col total}) / \\text{grand total}\\)",
-      "For each cell, calculate \\((O - E)^2 / E\\) and add all cells together to get \\(\\chi^2_{obtained}\\)",
-      "If \\(\\chi^2_{obtained} > 5.991\\) → Reject \\(H_0\\)"
+      "\\(df = (2-1)(3-1) = 2\\); \\(\\chi^2_{critical} = 5.991\\). Row totals: 100 and 200. Column totals: 100, 100, 100. \\(N = 300\\)",
+      "Expected counts \\(E = (\\text{row} \\times \\text{column}) / N\\). Victims: \\(100 \\times 100 / 300 = 33.3\\) in each column. Non-victims: \\(200 \\times 100 / 300 = 66.7\\) in each column",
+      "Cell contributions \\((O-E)^2/E\\). Victims: \\(5.33, 0.33, 8.33\\). Non-victims: \\(2.67, 0.17, 4.17\\)",
+      "\\(\\chi^2_{obtained} = 5.33 + 0.33 + 8.33 + 2.67 + 0.17 + 4.17 = 21.0\\)",
+      "\\(21.0 > 5.991\\) → Reject \\(H_0\\)",
     ],
-    interpretation: "\"There is [not] sufficient evidence of an association between victimization and concern about crime (χ² = [value], df = 2, p [</≥] 0.05).\""
+    interpretation: "\"There is a statistically significant association between victimization and concern about crime (χ² = 21.0, df = 2, p < .001).\"",
   }
 };
 
