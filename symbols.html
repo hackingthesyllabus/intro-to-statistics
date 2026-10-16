@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Symbols — SOC222 Statistical Decision Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="pages.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] },
+      startup: {
+        ready() {
+          MathJax.startup.defaultReady();
+          if (window.onMathReady) window.onMathReady();
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">SOC222 · Statistical Decision Tool</p>
+      <h1>Symbols, explained</h1>
+      <p class="tagline">Every symbol used in the decision tree, the formula reference, the formula map and the practice questions.</p>
+    </div>
+  </header>
+
+  <nav class="tabnav" aria-label="Site sections">
+    <div class="tabnav-inner">
+      <a class="tab" href="index.html">Decision tree</a>
+      <a class="tab active" href="symbols.html" aria-current="page">Symbols</a>
+      <a class="tab" href="formulas.html">Formulas</a>
+      <a class="tab" href="reference.html">Formula reference</a>
+      <a class="tab" href="practice.html">Practice (100)</a>
+    </div>
+  </nav>
+
+  <main class="page-main">
+    <p class="page-intro">Each card gives the symbol, what it means, where you meet it, and the mistake students make most often. Search by symbol or word, or filter by topic.</p>
+
+    <div class="toolbar" id="toolbar">
+      <input class="search" id="search" type="search" placeholder="Search by symbol, name or meaning…" aria-label="Search symbols" />
+      <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+
+    <p class="notice">This site uses <strong>N</strong> for sample size in means and <strong>n</strong> for sample size in proportions and tables. Other sources may use different letters, so follow your instructor's notation on tests.</p>
+
+    <div class="sym-grid" id="grid"></div>
+    <p class="empty" id="empty" hidden>No symbols match that search.</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>SOC222 · Symbols · Course text: <em>Social Statistics for a Diverse Society</em> (Frankfort-Nachmias et al., 10th ed.)</p>
+  </footer>
+
+  <script>
+    const CATS = ["All", "Descriptive", "Sampling & probability", "Estimation (CI)", "Hypothesis testing", "Chi-square", "Regression & association", "General notation"];
+
+    // g = LaTeX glyph, n = name, c = category, m = meaning, w = where you meet it, x = common mistake
+    const SYMBOLS = [
+      { g: "Y", n: "Variable (outcome score)", c: "Descriptive", m: "A variable we measure, such as years of education or a burnout score. Y_i is the score for case i.", w: "Every mean and SD formula. Y is the outcome in the t tests.", x: "Y is a variable. Ȳ is the mean of Y. Keep them separate." },
+      { g: "\\bar{Y}", n: "Sample mean (Y-bar)", c: "Descriptive", m: "The average of the sample scores: Ȳ = ΣY / N.", w: "The estimate in a CI for a mean; the numerator of the one-sample t.", x: "Ȳ is computed from your sample. μ is the population mean you are trying to learn." },
+      { g: "\\mu", n: "Population mean (mu)", c: "Descriptive", m: "The true average in the whole population. Usually unknown.", w: "The target of a confidence interval. Under H₀ it equals μ₀.", x: "Hypotheses are always about μ, never about Ȳ." },
+      { g: "s_Y", n: "Sample standard deviation", c: "Descriptive", m: "How spread out the sample scores are: s = √[Σ(Y − Ȳ)² / (N − 1)].", w: "Estimated SE = s/√N, and the t statistic.", x: "Use N − 1 in the denominator for a sample. Use s when σ is unknown, which is almost always." },
+      { g: "\\sigma", n: "Population standard deviation", c: "Descriptive", m: "The true spread of scores in the population.", w: "SE of the mean when σ is known (z). In practice it is replaced by s.", x: "σ is the population value; s is the sample estimate of it." },
+      { g: "s^2", n: "Variance", c: "Descriptive", m: "The SD squared: s² = Σ(Y − Ȳ)² / (N − 1).", w: "Two-sample SE: s₁²/N₁ + s₂²/N₂.", x: "Variance is in squared units. Take the square root to get back to SD units." },
+      { g: "\\Sigma", n: "Summation", c: "Descriptive", m: "Add up the expression to its right over every case (or cell).", w: "Mean, variance and the chi-square statistic.", x: "Sum first, then divide. Do not divide each term by N before adding." },
+      { g: "z", n: "z-score", c: "Descriptive", m: "How many SDs a score sits from the mean: z = (Y − Ȳ)/s.", w: "The standard normal table and the z critical values.", x: "z is also the name of the test statistic in z tests. A z-score here refers to one case." },
+      { g: "N", n: "Sample size (means)", c: "Descriptive", m: "The number of cases in the sample. This site uses N for means.", w: "SE = s/√N; df = N − 1.", x: "N and n both mean sample size. Check which letter your formula uses." },
+      { g: "n", n: "Sample size (proportions and tables)", c: "Descriptive", m: "The number of cases in a sample used for a proportion or a table.", w: "p̂ = x/n; SEs for proportion CIs and z tests.", x: "With two groups you need n₁ and n₂." },
+
+      { g: "\\pi", n: "Population proportion (pi)", c: "Sampling & probability", m: "The true share of the population with a trait. This is the Greek letter pi, not 3.14.", w: "The parameter in SE = √(π(1−π)/n).", x: "π is a proportion between 0 and 1, not the constant 3.14." },
+      { g: "\\hat{p}", n: "Sample proportion (p-hat)", c: "Sampling & probability", m: "The share of the sample with the trait: p̂ = x/n, where x is the count of yes responses.", w: "CI for a proportion; one-proportion and two-proportion z tests.", x: "p̂ is a statistic from your sample. π is the population value." },
+      { g: "\\sigma_{\\bar{Y}}", n: "Standard error of the mean", c: "Sampling & probability", m: "How much sample means vary from sample to sample: σ/√N. Estimated by s/√N.", w: "Denominator of the CI for a mean and of the one-sample t.", x: "It shrinks as N grows. Quadrupling N halves the SE." },
+      { g: "SE", n: "Standard error (general)", c: "Sampling & probability", m: "The standard deviation of a sampling distribution: how much a statistic would vary across samples.", w: "Denominator of every confidence interval and test statistic.", x: "SE is not the SD of your data. The SD of the data is s." },
+      { g: "\\mu_{\\bar{Y}}", n: "Mean of the sampling distribution", c: "Sampling & probability", m: "Equals μ. Sample means are centered on the population mean.", w: "Why CIs and t tests work: the sampling distribution is centered on the true value.", x: "The sampling distribution describes sample means. It is not the distribution of the raw data." },
+      { g: "\\sigma_{\\hat{p}}", n: "Standard error of a proportion", c: "Sampling & probability", m: "√(π(1−π)/n) using the population value. For a CI it is estimated as √(p̂(1−p̂)/n); for a test it uses π₀.", w: "The CI for a proportion (p̂ version) and the one-proportion z test (π₀ version).", x: "The test uses π₀ in the SE because it assumes H₀ is true." },
+
+      { g: "t^*", n: "Critical t (for a CI)", c: "Estimation (CI)", m: "The t value that leaves the middle (confidence level) of the t distribution with df = N − 1 in the two tails.", w: "CI for a mean: Ȳ ± t* × SE.", x: "For a 95% interval, look up the 0.975 point, because the two tails share the remaining 5%." },
+      { g: "z^*", n: "Critical z (for a CI)", c: "Estimation (CI)", m: "1.645 for 90%, 1.96 for 95%, 2.576 for 99%.", w: "CI for a proportion: p̂ ± z* × SE.", x: "Use z* for proportions and t* for means." },
+      { g: "\\text{MOE}", n: "Margin of error", c: "Estimation (CI)", m: "Critical value × standard error: the ± part of a confidence interval.", w: "Half the width of a CI.", x: "A higher confidence level gives a larger MOE and a wider interval." },
+      { g: "1-\\alpha", n: "Confidence level", c: "Estimation (CI)", m: "The long-run share of intervals that would capture the true value. A 95% CI matches α = .05, two-tailed.", w: "Choosing z* or t* for the interval.", x: "A 95% CI describes the method. It does not give a 95% chance that one fixed interval holds the true value." },
+
+      { g: "H_0", n: "Null hypothesis", c: "Hypothesis testing", m: "The claim of no difference, or the stated benchmark. It is the claim we test.", w: "Every test. It sets μ₀ or π₀, or 'no difference' between groups.", x: "We never prove H₀. We either reject it or fail to reject it." },
+      { g: "H_A", n: "Alternative hypothesis", c: "Hypothesis testing", m: "What we conclude if H₀ is rejected. Two-tailed: ≠. One-tailed: > or <.", w: "Every test.", x: "Choose H_A from the research question before you look at the data." },
+      { g: "\\alpha", n: "Significance level (alpha)", c: "Hypothesis testing", m: "The risk of rejecting H₀ when it is true (Type I error). Usually 0.05.", w: "Sets the critical value and the rejection region.", x: "α is a threshold you choose in advance. It is not the p-value." },
+      { g: "p", n: "p-value", c: "Hypothesis testing", m: "The probability of a result at least this extreme if H₀ were true.", w: "Compare with α: reject H₀ if p < α.", x: "A small p-value is not the probability that H₀ is true." },
+      { g: "\\mu_0", n: "Hypothesized mean", c: "Hypothesis testing", m: "The benchmark stated in H₀ for a mean.", w: "One-sample t: t = (Ȳ − μ₀) / SE.", x: "μ₀ is the null value. μ is the true population mean." },
+      { g: "\\pi_0", n: "Hypothesized proportion", c: "Hypothesis testing", m: "The benchmark stated in H₀ for a proportion.", w: "One-proportion z test: SE = √(π₀(1−π₀)/n).", x: "Use π₀, not p̂, in the SE for the test." },
+      { g: "t_{\\text{obt}}", n: "Obtained statistic (t or z)", c: "Hypothesis testing", m: "The test statistic you calculate from your data.", w: "Compared with the critical value.", x: "'obt' means obtained (from your data). 'crit' means the table value." },
+      { g: "t_{\\text{crit}}", n: "Critical value", c: "Hypothesis testing", m: "The table value that marks the edge of the rejection region for a given α and df (or z_crit for z tests).", w: "Decision rule: reject H₀ if |statistic| > critical value.", x: "For a one-tailed test, use only one side: +1.645 or −1.645." },
+      { g: "df", n: "Degrees of freedom", c: "Hypothesis testing", m: "How many values are free to vary. N − 1 for one sample; Welch's df for two means; (r − 1)(c − 1) for tables.", w: "Looking up t and χ² critical values.", x: "df is not the sample size." },
+      { g: "df_{\\text{Welch}}", n: "Welch degrees of freedom", c: "Hypothesis testing", m: "The approximate df for comparing two means when the variances may differ.", w: "The two-sample t test in this course.", x: "The pooled df, N₁ + N₂ − 2, applies only when the two variances are assumed equal." },
+
+      { g: "\\chi^2", n: "Chi-square statistic", c: "Chi-square", m: "Σ (O − E)² / E. Large values mean the counts differ from what independence predicts.", w: "Test of association in a table of counts.", x: "χ² is never negative, and it is not a percentage." },
+      { g: "O", n: "Observed count", c: "Chi-square", m: "The number of cases actually in a table cell.", w: "The numerator of each cell's contribution to χ².", x: "Use counts, not percentages, when computing χ²." },
+      { g: "E", n: "Expected count", c: "Chi-square", m: "(Row total × column total) ÷ N: the count expected if the two variables were independent.", w: "Each cell of the χ² calculation. Check that every E is at least 5.", x: "E is computed cell by cell. It is not the average of the observed counts." },
+      { g: "r, c", n: "Rows and columns", c: "Chi-square", m: "The number of categories in each variable: the rows and columns of the table.", w: "df = (r − 1)(c − 1).", x: "r and c count categories, not cases." },
+
+      { g: "X", n: "Predictor (X variable)", c: "Regression & association", m: "The variable used to predict Y.", w: "Covariance, correlation and regression.", x: "By convention X predicts Y. Reversing them changes the slope." },
+      { g: "\\text{cov}_{XY}", n: "Covariance", c: "Regression & association", m: "How X and Y vary together: Σ(X − X̄)(Y − Ȳ) / (N − 1).", w: "An ingredient in r and in the slope b.", x: "Covariance depends on the units, so it is hard to read on its own." },
+      { g: "r", n: "Correlation (Pearson r)", c: "Regression & association", m: "Standardized covariance, from −1 to +1. It measures the strength and direction of a linear relationship.", w: "Correlation questions.", x: "r = 0 means no linear relationship, not no relationship at all." },
+      { g: "b", n: "Regression slope", c: "Regression & association", m: "The predicted change in Y for a one-unit increase in X: b = Σ(X − X̄)(Y − Ȳ) / Σ(X − X̄)².", w: "The prediction line Ŷ = a + bX.", x: "b is in units of Y per unit of X." },
+      { g: "a", n: "Regression intercept", c: "Regression & association", m: "The predicted Y when X = 0: a = Ȳ − bX̄.", w: "The prediction line.", x: "Only meaningful when X = 0 is a plausible value." },
+      { g: "\\hat{Y}", n: "Predicted Y", c: "Regression & association", m: "The value the line predicts for Y: Ŷ = a + bX.", w: "Prediction and residuals.", x: "Ŷ is a prediction. Y is the observed value." },
+      { g: "e", n: "Residual", c: "Regression & association", m: "The prediction error for one case: e = Y − Ŷ.", w: "Checking how well the line fits.", x: "For a least-squares line the residuals sum to zero." },
+
+      { g: "\\sqrt{\\ }", n: "Square root", c: "General notation", m: "The number that squares to the value under the sign. √N is the square root of N.", w: "Standard errors.", x: "√(a + b) is not √a + √b." },
+      { g: "\\pm", n: "Plus or minus", c: "General notation", m: "Two values, one above and one below the center: estimate ± margin of error.", w: "Confidence intervals and two-sided critical values.", x: "A ± statement gives two bounds, not one." },
+      { g: "\\neq", n: "Not equal to", c: "General notation", m: "Used in H_A for a two-tailed test: μ ≠ μ₀.", w: "Two-tailed alternatives.", x: "'Different from' means ≠, so the test is two-tailed." },
+      { g: "|x|", n: "Absolute value", c: "General notation", m: "The size of x with its sign removed: |−2.7| = 2.7.", w: "Two-tailed decisions compare |statistic| with the critical value.", x: "Compare absolute values, or you will reject in the wrong direction." },
+      { g: "\\approx", n: "Approximately equal", c: "General notation", m: "Close to, after rounding.", w: "Rounded results and table look-ups.", x: "Course policy: round final answers to 2 significant figures." }
+    ];
+
+    let activeCat = "All";
+
+    function esc(s) {
+      return s.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
+    }
+
+    function buildChips() {
+      const bar = document.getElementById('chips');
+      bar.innerHTML = '';
+      CATS.forEach(cat => {
+        const b = document.createElement('button');
+        b.className = 'chip' + (cat === activeCat ? ' active' : '');
+        b.textContent = cat;
+        b.addEventListener('click', () => { activeCat = cat; buildChips(); render(); });
+        bar.appendChild(b);
+      });
+    }
+
+    function render() {
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const list = SYMBOLS.filter(s =>
+        (activeCat === 'All' || s.c === activeCat) &&
+        (!q || (s.n + ' ' + s.m + ' ' + s.g).toLowerCase().includes(q))
+      );
+      const grid = document.getElementById('grid');
+      grid.innerHTML = list.map(s => `
+        <article class="sym-card">
+          <div class="sym-head">
+            <span class="sym-glyph">\\(${s.g}\\)</span>
+            <div>
+              <div class="sym-name">${esc(s.n)}</div>
+              <div class="sym-cat">${esc(s.c)}</div>
+            </div>
+          </div>
+          <p class="sym-meaning">${esc(s.m)}</p>
+          <p class="sym-where"><strong>Where you meet it:</strong> ${esc(s.w)}</p>
+          <p class="sym-watch"><strong>Watch out:</strong> ${esc(s.x)}</p>
+        </article>`).join('');
+      document.getElementById('empty').hidden = list.length > 0;
+      if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([grid]);
+    }
+
+    window.onMathReady = render;
+    if (window.MathJax && window.MathJax.typesetPromise) render();
+    document.getElementById('search').addEventListener('input', render);
+    buildChips();
+    render();
+  </script>
+</body>
+</html>

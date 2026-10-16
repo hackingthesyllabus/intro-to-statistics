@@ -1,0 +1,301 @@
+/* ─────────────────────────────────────────────
+   SHARED PAGE LAYOUT (symbols, formulas, practice)
+───────────────────────────────────────────── */
+.page-main {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 28px 24px 56px;
+}
+.page-intro {
+  font-size: 16px;
+  color: var(--ink2);
+  max-width: 840px;
+  margin-bottom: 22px;
+}
+.section-title { font-size: 28px; margin: 28px 0 14px; color: var(--ink); }
+.empty { color: var(--muted); font-style: italic; }
+.notice {
+  background: #fffdf0;
+  border: 1px solid #f0e0a0;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--ink2);
+  margin-bottom: 18px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.search {
+  flex: 1 1 260px;
+  padding: 10px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--ink);
+}
+.search:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(35,71,168,.12); }
+.chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink2);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.btn {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn:hover { background: #1a3690; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.ghost:hover { background: var(--accent-soft); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ─────────────────────────────────────────────
+   SYMBOLS (glossary)
+───────────────────────────────────────────── */
+.sym-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+.sym-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sym-head { display: flex; align-items: center; gap: 12px; }
+.sym-glyph {
+  font-size: 26px;
+  color: var(--accent);
+  min-width: 60px;
+  text-align: center;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+}
+.sym-name { font-weight: 600; font-size: 15px; color: var(--ink); }
+.sym-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+}
+.sym-meaning { font-size: 14px; color: var(--ink2); }
+.sym-where { font-size: 13px; color: var(--ink2); }
+.sym-where strong, .sym-watch strong { color: var(--ink); }
+.sym-watch {
+  font-size: 13px;
+  color: var(--ink2);
+  background: var(--t-soft);
+  border-left: 3px solid var(--t);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 6px 10px;
+}
+
+/* ─────────────────────────────────────────────
+   FORMULAS (relationship map + library)
+───────────────────────────────────────────── */
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 1000px) { .map-layout { grid-template-columns: 1fr; } }
+.map-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  padding: 16px;
+  overflow-x: auto;
+}
+.map-svg { width: 100%; min-width: 760px; height: auto; display: block; }
+.map-svg .node { cursor: pointer; transition: opacity .15s; }
+.map-svg .node:hover rect { stroke-width: 3; }
+.map-svg .node.selected rect { stroke: var(--accent); stroke-width: 3; }
+.map-svg .lane-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  fill: var(--muted);
+  letter-spacing: .08em;
+}
+.map-svg text { font-family: 'DM Sans', sans-serif; }
+.detail {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 80px;
+}
+.detail h3 { font-size: 22px; margin-bottom: 6px; }
+.detail .d-formula {
+  background: #f5f7ff;
+  border: 1.5px solid #c5cfea;
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: center;
+  margin: 10px 0;
+  font-size: 16px;
+  overflow-x: auto;
+}
+.detail p { font-size: 14px; color: var(--ink2); margin-bottom: 6px; }
+.d-label {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  margin-top: 12px;
+  margin-bottom: 2px;
+}
+
+.lib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 14px;
+}
+.lib-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lib-card h3 { font-size: 19px; }
+.lib-formula {
+  background: #f5f7ff;
+  border: 1px solid #c5cfea;
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: center;
+  font-size: 16px;
+  overflow-x: auto;
+}
+.lib-card p { font-size: 14px; color: var(--ink2); }
+.lib-card .tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────────
+   PRACTICE (100 questions, step by step)
+───────────────────────────────────────────── */
+.q-list { display: flex; flex-direction: column; gap: 14px; }
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.q-card.open { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(35,71,168,.08), var(--shadow-sm); }
+.q-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.q-num { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
+.q-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  letter-spacing: .04em;
+}
+.q-title { font-size: 17px; font-weight: 600; margin: 8px 0 4px; color: var(--ink); }
+.q-scenario { font-size: 15px; color: var(--ink2); }
+.q-path { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.q-givens {
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--ink2);
+}
+.q-givens li { margin-bottom: 2px; }
+.q-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
+.q-progress { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); margin-left: 6px; }
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.step {
+  border-left: 3px solid var(--line2);
+  padding: 9px 14px;
+  background: var(--surface2);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 14px;
+  color: var(--ink2);
+}
+.step[hidden] { display: none; }
+.step.current { border-left-color: var(--accent); background: var(--accent-soft); }
+.step .s-title {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.answer-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: #f0faf1;
+  border-left: 3px solid var(--ci);
+  font-size: 14px;
+  color: var(--ink2);
+}
+.answer-box[hidden] { display: none; }
+.answer-box strong { color: var(--ink); }
+
+.q-empty-note { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 6px; }
+
+/* ─────────────────────────────────────────────
+   PRACTICE: step reveal and completion
+───────────────────────────────────────────── */
+.steps[hidden] { display: none; }
+.s-body { margin-top: 6px; font-size: 14px; color: var(--ink2); }
+.s-body[hidden] { display: none; }
+.q-card.done { border-left: 4px solid var(--ci); }
+.q-card.done .q-num { color: var(--ci); }

@@ -22,6 +22,16 @@
     </div>
   </header>
 
+  <nav class="tabnav" aria-label="Site sections">
+    <div class="tabnav-inner">
+      <a class="tab" href="index.html">Decision tree</a>
+      <a class="tab" href="symbols.html">Symbols</a>
+      <a class="tab" href="formulas.html">Formulas</a>
+      <a class="tab active" href="reference.html">Formula reference</a>
+      <a class="tab" href="practice.html">Practice (100)</a>
+    </div>
+  </nav>
+
   <main class="ref-main">
 
     <!-- QUICK RECOGNITION -->
@@ -78,7 +88,7 @@
           </div>
           <div class="decision-step">
             <span class="d-num">2</span>
-            <div><strong>What kind of outcome variable?</strong><br>Numeric → t test. Categorical → z test. Both categorical → chi-square.</div>
+            <div><strong>What kind of outcome variable?</strong><br>Numeric → t test. Categorical, comparing proportions → z test. Association between two categorical variables in a table of counts → chi-square.</div>
           </div>
           <div class="decision-step">
             <span class="d-num">3</span>
@@ -129,7 +139,7 @@
           </div>
           <div class="formula-parts">
             <div class="fp-row"><span class="fp-sym">p̂</span><span class="fp-desc">sample proportion</span></div>
-            <div class="fp-row"><span class="fp-sym">z*</span><span class="fp-desc">critical z value (1.96 for 95%, 2.58 for 99%)</span></div>
+            <div class="fp-row"><span class="fp-sym">z*</span><span class="fp-desc">critical z value (1.96 for 95%, 2.576 for 99%)</span></div>
             <div class="fp-row"><span class="fp-sym">n</span><span class="fp-desc">sample size</span></div>
           </div>
           <div class="fc-example">
@@ -197,7 +207,7 @@
             <div class="fp-row"><span class="fp-sym">Ȳ<sub>1</sub>, Ȳ<sub>2</sub></span><span class="fp-desc">means of the two groups</span></div>
             <div class="fp-row"><span class="fp-sym">s<sub>1</sub>, s<sub>2</sub></span><span class="fp-desc">standard deviations of each group</span></div>
             <div class="fp-row"><span class="fp-sym">N<sub>1</sub>, N<sub>2</sub></span><span class="fp-desc">sample sizes of each group</span></div>
-            <div class="fp-row"><span class="fp-sym">df</span><span class="fp-desc">(N<sub>1</sub> − 1) + (N<sub>2</sub> − 1)</span></div>
+            <div class="fp-row"><span class="fp-sym">df</span><span class="fp-desc">Welch’s df for unequal variances: (a + b)² / [a²/(N₁−1) + b²/(N₂−1)], where a = s₁²/N₁ and b = s₂²/N₂</span></div>
           </div>
           <div class="fc-example">
             <span class="ex-label">Example cue</span>
@@ -207,7 +217,7 @@
             <span class="steps-label">Five-step model</span>
             <ol>
               <li>H₀: μ<sub>1</sub> = μ<sub>2</sub>; H<sub>A</sub>: μ<sub>1</sub> ≠ μ<sub>2</sub> (or &gt; / &lt; for one-tailed)</li>
-              <li>Choose α; calculate df = (N<sub>1</sub>−1) + (N<sub>2</sub>−1)</li>
+              <li>Choose α; calculate Welch’s df (formula above)</li>
               <li>Find t<sub>critical</sub> from the t table</li>
               <li>Calculate SE and then t<sub>obtained</sub></li>
               <li>Compare: reject H₀ if |t<sub>obtained</sub>| &gt; t<sub>critical</sub></li>
@@ -347,7 +357,7 @@
             <p>"There is [not] evidence of an association between [variable 1] and [variable 2] (χ² = [value], df = [value], p [&lt;/≥] 0.05)."</p>
           </div>
           <div class="chi-note">
-            <strong>Note:</strong> Chi-square is always a two-tailed / non-directional test. You cannot specify "greater than" or "less than." The hypotheses are always about independence vs. association.
+            <strong>Note:</strong> Chi-square tests are non-directional. The hypotheses are about association (H<sub>A</sub>: the variables are related), so you cannot specify "greater than" or "less than." The rejection region is the upper tail of the χ² distribution. For a 2×2 table comparing two proportions, the two-proportion z test gives the same conclusion, because z² = χ².
           </div>
         </article>
 
@@ -361,11 +371,11 @@
         <div class="crit-card">
           <h4>z critical values</h4>
           <table class="crit-table">
-            <thead><tr><th>α</th><th>Two-tailed</th><th>One-tailed</th></tr></thead>
+            <thead><tr><th>α</th><th>Two-tailed (±)</th><th>One-tailed (one side)</th></tr></thead>
             <tbody>
-              <tr><td>0.10</td><td>±1.645</td><td>±1.282</td></tr>
-              <tr><td>0.05</td><td>±1.960</td><td>±1.645</td></tr>
-              <tr><td>0.01</td><td>±2.576</td><td>±2.326</td></tr>
+              <tr><td>0.10</td><td>±1.645</td><td>1.282 (one side)</td></tr>
+              <tr><td>0.05</td><td>±1.960</td><td>1.645 (one side)</td></tr>
+              <tr><td>0.01</td><td>±2.576</td><td>2.326 (one side)</td></tr>
             </tbody>
           </table>
         </div>
@@ -374,15 +384,15 @@
           <table class="crit-table">
             <thead><tr><th>df</th><th>α=0.05 two-tailed</th><th>α=0.05 one-tailed</th></tr></thead>
             <tbody>
-              <tr><td>10</td><td>±2.228</td><td>±1.812</td></tr>
-              <tr><td>20</td><td>±2.086</td><td>±1.725</td></tr>
-              <tr><td>30</td><td>±2.042</td><td>±1.697</td></tr>
-              <tr><td>60</td><td>±2.000</td><td>±1.671</td></tr>
-              <tr><td>120</td><td>±1.980</td><td>±1.658</td></tr>
-              <tr><td>∞</td><td>±1.960</td><td>±1.645</td></tr>
+              <tr><td>10</td><td>±2.228</td><td>1.812 (one side)</td></tr>
+              <tr><td>20</td><td>±2.086</td><td>1.725 (one side)</td></tr>
+              <tr><td>30</td><td>±2.042</td><td>1.697 (one side)</td></tr>
+              <tr><td>60</td><td>±2.000</td><td>1.671 (one side)</td></tr>
+              <tr><td>120</td><td>±1.980</td><td>1.658 (one side)</td></tr>
+              <tr><td>∞</td><td>±1.960</td><td>1.645 (one side)</td></tr>
             </tbody>
           </table>
-          <p class="crit-note">Use df = N − 1 for one-sample; df = (N₁−1)+(N₂−1) for two-sample</p>
+          <p class="crit-note">One-sample: df = N − 1. Two-sample: Welch’s df (see the two-sample card). One-tailed values: use only the side that matches H<sub>A</sub>. If your df is not listed, use the next row down (a slightly larger, more conservative critical value).</p>
         </div>
         <div class="crit-card">
           <h4>χ² critical values</h4>
@@ -391,7 +401,7 @@
             <tbody>
               <tr><td>1</td><td>3.841</td><td>6.635</td></tr>
               <tr><td>2</td><td>5.991</td><td>9.210</td></tr>
-              <tr><td>3</td><td>7.815</td><td>11.341</td></tr>
+              <tr><td>3</td><td>7.815</td><td>11.345</td></tr>
               <tr><td>4</td><td>9.488</td><td>13.277</td></tr>
               <tr><td>6</td><td>12.592</td><td>16.812</td></tr>
             </tbody>
@@ -418,7 +428,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>SOC222 · <em>Measuring the Social World</em> · Formula Reference</p>
+    <p>SOC222 · Formula Reference · Course text: <em>Social Statistics for a Diverse Society</em> (Frankfort-Nachmias et al., 10th ed.)</p>
   </footer>
 
 </body>

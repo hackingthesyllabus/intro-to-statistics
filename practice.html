@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice — SOC222 Statistical Decision Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="pages.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] },
+      startup: {
+        ready() {
+          MathJax.startup.defaultReady();
+          if (window.onMathReady) window.onMathReady();
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">SOC222 · Statistical Decision Tool</p>
+      <h1>Practice: 100 step-by-step problems</h1>
+      <p class="tagline">Each problem follows the same path you would use on a test: choose the test, state the hypotheses, compute, decide, and interpret. Try each step before you reveal it.</p>
+    </div>
+  </header>
+
+  <nav class="tabnav" aria-label="Site sections">
+    <div class="tabnav-inner">
+      <a class="tab" href="index.html">Decision tree</a>
+      <a class="tab" href="symbols.html">Symbols</a>
+      <a class="tab" href="formulas.html">Formulas</a>
+      <a class="tab" href="reference.html">Formula reference</a>
+      <a class="tab active" href="practice.html" aria-current="page">Practice (100)</a>
+    </div>
+  </nav>
+
+  <main class="page-main">
+    <div class="notice">
+      <strong>About these problems.</strong> All data are hypothetical. Final answers are rounded to 2 significant figures, the course rule (syllabus, “Rounding”). Working steps keep more digits so that rounding does not build up. Critical values come from the t table at the df shown; if your df is not listed, use the next row down, which is the more conservative choice. Two-sample problems use the Welch method, the same one the decision tree uses. If your instructor uses the pooled-variance formula, the t values will differ.
+    </div>
+
+    <div class="toolbar">
+      <input class="search" id="search" type="search" placeholder="Search by topic, e.g. “trust”, “commute”, “chi”" aria-label="Search questions" />
+      <button class="btn ghost" id="btn-random" type="button">Random question</button>
+    </div>
+
+    <div class="toolbar" id="chips" role="group" aria-label="Filter by type of test"></div>
+
+    <p class="page-intro" id="count" aria-live="polite"></p>
+
+    <div class="q-list" id="list"></div>
+    <p class="empty" id="empty" hidden>No questions match. Clear the search or choose “All”.</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>SOC222 · Practice · Course text: <em>Social Statistics for a Diverse Society</em> (Frankfort-Nachmias et al., 10th ed.)</p>
+  </footer>
+
+  <script src="questions.js"></script>
+  <script src="practice.js"></script>
+</body>
+</html>

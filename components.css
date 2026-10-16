@@ -1,0 +1,218 @@
+/* ─────────────────────────────────────────────
+   TAB NAVIGATION (shared by every page)
+───────────────────────────────────────────── */
+.tabnav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.tabnav-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 14px 16px;
+  color: var(--ink2);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: background .15s, color .15s;
+}
+.tab:hover { background: var(--accent-soft); color: var(--accent); }
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* ─────────────────────────────────────────────
+   FORMULA REFERENCE PAGE
+───────────────────────────────────────────── */
+.ref-main {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+.ref-section { margin-bottom: 44px; }
+.ref-section-title { font-size: 30px; margin-bottom: 16px; color: var(--ink); }
+
+.recognition-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+.recog-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.recog-icon { font-size: 24px; }
+.recog-card h3 { font-size: 19px; margin: 6px 0; }
+.recog-trigger { font-size: 13px; color: var(--muted); font-style: italic; }
+.recog-result { font-size: 14px; margin-top: 8px; color: var(--ink2); }
+
+.decision-reminder {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+}
+.decision-reminder h2 { font-size: 24px; margin-bottom: 14px; }
+.decision-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.decision-step { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--ink2); }
+.d-num, .fs-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.formula-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 20px;
+}
+.formula-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.formula-card.wide { grid-column: 1 / -1; }
+.formula-card h3 { font-size: 22px; }
+.fc-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 700;
+  font-size: 13px;
+  border: 1.5px solid;
+}
+.fc-badge.ci { color: var(--ci); background: var(--ci-soft); border-color: var(--ci); }
+.fc-badge.t1, .fc-badge.t2 { color: var(--t); background: var(--t-soft); border-color: var(--t); }
+.fc-badge.z1, .fc-badge.z2 { color: var(--z); background: var(--z-soft); border-color: var(--z); }
+.fc-badge.chi { color: var(--chi); background: var(--chi-soft); border-color: var(--chi); }
+.fc-when { font-size: 14px; color: var(--ink2); }
+
+.formula-display {
+  background: #f5f7ff;
+  border: 1.5px solid #c5cfea;
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+  font-size: 19px;
+}
+.formula-sub-box {
+  background: var(--surface2);
+  border: 1px dashed var(--line2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 14px;
+  text-align: center;
+}
+.formula-note { font-size: 13px; color: var(--muted); }
+.formula-parts { display: flex; flex-direction: column; gap: 6px; }
+.fp-row { display: flex; gap: 12px; font-size: 14px; }
+.fp-sym {
+  font-family: 'DM Mono', monospace;
+  color: var(--accent);
+  min-width: 90px;
+  font-weight: 600;
+}
+.fp-desc { color: var(--ink2); }
+
+.fc-example, .fc-steps, .fc-interp {
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--ink2);
+}
+.fc-example { background: #fffdf0; border-left: 3px solid #f0c040; }
+.fc-steps { background: var(--surface2); }
+.fc-steps ol { padding-left: 1.4em; }
+.fc-steps li { margin-bottom: 4px; }
+.fc-interp { background: #f0faf1; border-left: 3px solid var(--ci); font-style: italic; }
+.ex-label, .steps-label, .interp-label {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-style: normal;
+}
+
+.tail-note, .chi-note {
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 14px;
+  margin-top: 18px;
+  color: var(--ink2);
+}
+.chi-note { margin-top: 0; }
+
+.crit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+.crit-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.crit-card h4 { font-size: 19px; margin-bottom: 10px; }
+.crit-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.crit-table th, .crit-table td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; }
+.crit-table th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; }
+.crit-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+.five-step-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.five-step-box h2 { font-size: 26px; margin-bottom: 16px; }
+.five-step-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.fs-step { display: flex; gap: 12px; font-size: 14px; color: var(--ink2); }
+
+@media (max-width: 680px) {
+  .formula-cards-grid { grid-template-columns: 1fr; }
+  .ref-section-title { font-size: 24px; }
+}
